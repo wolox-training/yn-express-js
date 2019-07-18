@@ -6,7 +6,8 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        unique: true
       },
       ID: {
         type: Sequelize.INTEGER,
@@ -22,7 +23,8 @@ module.exports = {
       },
       Email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       Contrasea: {
         type: Sequelize.STRING,
