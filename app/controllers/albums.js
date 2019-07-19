@@ -1,16 +1,23 @@
-/* eslint-disable func-names */
-const servicesAlbums = require('../services/albums');
-
-exports.getAlbums = (req, res, next) =>
-  servicesAlbums
-    .getAlbumsApi()
-    .then(albums => res.send({ albums }))
-    .catch(() => next);
-
-exports.getAlbumsPhotos = function(req, res, next) {
+const servicesAlbums = require('../services/albums'),
+  logger = require('../logger'),
+  config = require('../../config'),
+  { url } = config.common.ApiAlbums;
+let source = url;
+exports.getAlbums = (req, res, next) => {
   const idAlbum = req.params.id;
+  logger.info(`${url}/albums/${idAlbum}`);
+  source = idAlbum === undefined ? `${url}/albums` : `${url}/albums/${idAlbum}`;
   servicesAlbums
-    .getAlbumsPhotosApi(idAlbum)
+    .getAlbums(source)
     .then(albums => res.send({ albums }))
-    .catch(() => next);
+    .catch(next);
+};
+
+exports.getAlbumsPhotos = (req, res, next) => {
+  const idAlbum = req.params.id;
+  source = `${url}/photos?albumId=${idAlbum}`;
+  servicesAlbums
+    .getAlbums(source)
+    .then(albumsPhotos => res.send({ albumsPhotos }))
+    .catch(next);
 };

@@ -1,15 +1,9 @@
-const request = require('request-promise');
+const request = require('request-promise'),
+  logger = require('../logger'),
+  errors = require('../errors');
 
-exports.getAlbumsApi = () =>
-  request('https://jsonplaceholder.typicode.com/albums')
-    .then(htmlString => JSON.parse(htmlString))
-    .catch(error => {
-      throw error;
-    });
-
-exports.getAlbumsPhotosApi = idAlbum =>
-  request(`https://jsonplaceholder.typicode.com/photos?albumId=${idAlbum}`)
-    .then(htmlString => JSON.parse(htmlString))
-    .catch(error => {
-      throw error;
-    });
+exports.getAlbums = url =>
+  request(url).catch(error => {
+    logger.error(error);
+    throw errors.albumsApiError(error.message);
+  });
