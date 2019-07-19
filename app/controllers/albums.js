@@ -7,7 +7,7 @@ exports.getAlbums = (req, res, next) => {
   const idAlbum = req.params.id;
   logger.info(`${url}/albums/${idAlbum}`);
   source = idAlbum === undefined ? `${url}/albums` : `${url}/albums/${idAlbum}`;
-  servicesAlbums
+  return servicesAlbums
     .getAlbums(source)
     .then(albums => res.send({ albums }))
     .catch(next);
@@ -16,7 +16,7 @@ exports.getAlbums = (req, res, next) => {
 exports.getAlbumsPhotos = (req, res, next) => {
   const idAlbum = req.params.id;
   source = `${url}/photos?albumId=${idAlbum}`;
-  servicesAlbums
+  return servicesAlbums
     .getAlbums(source)
     .then(albumsPhotos => res.send({ albumsPhotos }))
     .catch(next);
