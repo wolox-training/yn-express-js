@@ -3,6 +3,7 @@ const servicesAlbums = require('../services/albums'),
   config = require('../../config'),
   { url } = config.common.ApiAlbums;
 let source = url;
+
 exports.getAlbums = (req, res, next) => {
   const idAlbum = req.params.id;
   logger.info(`${url}/albums/${idAlbum}`);
