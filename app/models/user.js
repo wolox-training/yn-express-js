@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
+
   User.associate = models => {
     models.User.hasOne(User, { foreignKey: 'id' });
   };
