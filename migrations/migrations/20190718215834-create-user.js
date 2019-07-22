@@ -13,10 +13,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      lastName: {
+      last_name: {
         type: Sequelize.STRING,
         allowNull: false,
-        field: 'lastname'
+        field: 'last_name'
       },
       email: {
         type: Sequelize.STRING,
@@ -27,13 +27,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        field: 'created_at'
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        field: 'created_at'
       }
     }),
   down: queryInterface => queryInterface.dropTable('Users')
