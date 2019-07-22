@@ -4,21 +4,45 @@ module.exports = (sequelize, DataTypes) => {
     'User',
     {
       id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
         type: DataTypes.INTEGER,
         unique: true
       },
-      name: DataTypes.STRING,
-      lastName: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'lastname'
+      },
       email: {
         type: DataTypes.STRING,
+        allowNull: false,
         unique: true
       },
-      password: DataTypes.STRING
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: sequelize.NOW
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: sequelize.NOW
+      }
     },
     {}
   );
-  // User.associate = function(models) {
-  //   // associations can be defined here
-  // };
+  User.associate = models => {
+    models.User.hasOne(User, { foreignKey: 'id' });
+  };
   return User;
 };
