@@ -1,13 +1,11 @@
 const servicesAlbums = require('../services/albums'),
-  logger = require('../logger'),
   config = require('../../config'),
   { url } = config.common.ApiAlbums;
 let source = url;
 
 exports.getAlbums = (req, res, next) => {
   const idAlbum = req.params.id;
-  logger.info(`${url}/albums/${idAlbum}`);
-  source = idAlbum === undefined ? `${url}/albums` : `${url}/albums/${idAlbum}`;
+  source = idAlbum ? `${url}/albums/${idAlbum}` : `${url}/albums`;
   return servicesAlbums
     .getAlbums(source)
     .then(albums => res.send({ albums }))
