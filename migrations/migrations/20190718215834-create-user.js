@@ -27,7 +27,8 @@ module.exports = {
         allowNull: false
       },
       created_at: Sequelize.DATE,
-      updated_at: Sequelize.DATE
+      updated_at: Sequelize.DATE,
+      delete_at: Sequelize.DATE
     }),
   down: queryInterface => queryInterface.dropTable('users')
 };
