@@ -11,7 +11,7 @@ exports.SignUp = (req, res, next) => {
     errors = validateUser.validateUser(userData);
 
   if (errors.length > 0) {
-    return res.status(400).json({ errors });
+    return res.json({ errors });
   }
   userData.password = bcrypt.hashSync(password, salt);
   return User.findAndCountAll({ where: { email: `${userData.email}` } })
