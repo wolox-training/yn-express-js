@@ -10,7 +10,8 @@ exports.SignUp = (req, res, next) => {
     userData = { name, lastName, email, password },
     errors = validateUser.validateUser(userData);
   if (errors.length > 0) {
-    return res.json({ errors });
+    logger.error(`Could not create user: ${userData.name}`);
+    throw error.validateUser(errors);
   }
   userData.password = bcrypt.hashSync(password, salt);
   return servicesUser
