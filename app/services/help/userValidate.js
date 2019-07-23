@@ -1,23 +1,24 @@
-const re = /^(([^<>\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@wolox.co\s*$/,
+const domain = /^(([^<>\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@wolox.co\s*$/,
   password = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
-let error = [];
+let errors = [];
+
 exports.validateUser = userData => {
-  error = [];
+  errors = [];
   if (!userData.email) {
-    error.push('el email es obligatorio.');
-  } else if (!re.test(userData.email)) {
-    error.push(`El email ${userData.email} no es valido ó no pertenece al dominio de wolox.`);
+    errors.push('email is required.');
+  } else if (!domain.test(userData.email)) {
+    errors.push(`email ${userData.email} is not valid or does not belong to the wolox domain`);
   }
   if (!userData.password) {
-    error.push('la contraseña es obligatorio.');
+    errors.push('password is required.');
   } else if (!password.test(userData.password)) {
-    error.push('la contraseña debe tener mínimo 8 caracteres alfanumericos.');
+    errors.push('password must have at least 8 alphanumeric characters.');
   }
   if (!userData.name) {
-    error.push('el nombre es obligatorio.');
+    errors.push('name is required.');
   }
   if (!userData.lastName) {
-    error.push('el apellido es obligatorio.');
+    errors.push('Last name is required.');
   }
-  return error;
+  return errors;
 };

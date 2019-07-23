@@ -5,32 +5,30 @@ const logger = require('../logger'),
   salt = bcrypt.genSaltSync(10),
   error = require('../errors');
 
-exports.SignUp = (req, res) => {
+exports.SignUp = (req, res, next) => {
   const { name, lastName, email, password } = req.body,
     userData = { name, lastName, email, password },
     errors = validateUser.validateUser(userData);
 
   if (errors.length > 0) {
-    logger.info('entro aqui 1');
     return res.status(400).json({ errors });
   }
-  logger.info('entro aqui 2');
   userData.password = bcrypt.hashSync(password, salt);
-  User.findAndCountAll({ where: { email: `${userData.email}` } })
+  return User.findAndCountAll({ where: { email: `${userData.email}` } })
     .then(result => {
-      logger.info(result.count);
-      if (result.count === 0) {
-        return User.create(userData)
-          .then(() => logger.info(`se creo correctamente el usuario: ${userData.name}`))
-          .catch(err => {
-            logger.error(`no se pudo crear el usuario: ${userData.name}`);
-            throw error.signUpError(err.message);
-          });
+      if (result.count !== 0) {
+        logger.error(`User already exists: ${userData.email}`);
+        throw error.signUpError('User already exists');
       }
-      return res.end();
+      return User.create(userData)
+        .then(() => {
+          logger.info(`the user was created correctly: ${userData.name}`);
+          res.send(`the user was created correctly: ${userData.name}`);
+        })
+        .catch(err => {
+          logger.error(`Could not create user: ${userData.name}`);
+          throw error.signUpError(err.message);
+        });
     })
-    .catch(err => {
-      throw error.signUpError(err.message);
-    });
-  return res.end();
+    .catch(next);
 };
