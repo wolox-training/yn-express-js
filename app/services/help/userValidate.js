@@ -1,23 +1,22 @@
-const domain = /^(([^<>\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@wolox.co\s*$/,
+const domain = /^(([^<>\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@wolox.(co|com|com.ar)\s*$/,
   password = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
-let errors = [];
 
 exports.validateUser = userData => {
-  errors = [];
-  if (!userData.email) {
+  const errors = [];
+  if (!userData.body.email) {
     errors.push('email is required.');
-  } else if (!domain.test(userData.email)) {
-    errors.push(`email ${userData.email} is not valid or does not belong to the wolox domain`);
+  } else if (!domain.test(userData.body.email)) {
+    errors.push(`email ${userData.body.email} is not valid or does not belong to the wolox domain`);
   }
-  if (!userData.password) {
+  if (!userData.body.password) {
     errors.push('password is required.');
-  } else if (!password.test(userData.password)) {
+  } else if (!password.test(userData.body.password)) {
     errors.push('password must have at least 8 alphanumeric characters.');
   }
-  if (!userData.name) {
+  if (!userData.body.name) {
     errors.push('name is required.');
   }
-  if (!userData.lastName) {
+  if (!userData.body.lastName) {
     errors.push('Last name is required.');
   }
   return errors;

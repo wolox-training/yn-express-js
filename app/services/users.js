@@ -9,14 +9,10 @@ exports.createUser = userData =>
       return result;
     })
     .catch(err => {
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        logger.error('User already exists');
+        throw error.signUpError('User already exists');
+      }
       logger.error(`Could not create user: ${userData.name}`);
-      throw error.signUpError(err.message);
-    });
-
-exports.existUser = email =>
-  User.findAndCountAll({ where: { email: `${email}` } })
-    .then(result => result.count)
-    .catch(err => {
-      logger.error(err);
-      throw error.albumsApiError(err.message);
+      throw error.databaseError(err.message);
     });
