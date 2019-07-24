@@ -13,7 +13,7 @@ exports.signUp = (req, res, next) => {
   return servicesUser
     .createUser(req.body)
     .then(() => {
-      res.send('the user was created correctly');
+      res.status(201).send('the user was created correctly');
     })
     .catch(next);
 };
