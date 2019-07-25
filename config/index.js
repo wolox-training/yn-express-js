@@ -42,8 +42,11 @@ const config = {
       header_name: 'authorization',
       secret: process.env.NODE_API_SESSION_SECRET
     },
-    ApiAlbums: {
+    apiAlbums: {
       url: process.env.URL_API_ALBUMS
+    },
+    bcrypt: {
+      magicNumberTen: process.env.BCRYPT_SALT
     }
   }
 };

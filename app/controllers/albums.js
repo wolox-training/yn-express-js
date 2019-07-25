@@ -1,6 +1,6 @@
 const servicesAlbums = require('../services/albums'),
   config = require('../../config'),
-  { url } = config.common.ApiAlbums;
+  { url } = config.common.apiAlbums;
 let source = url;
 
 exports.getAlbums = (req, res, next) => {

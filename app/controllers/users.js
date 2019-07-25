@@ -1,6 +1,8 @@
 const validateUser = require('../services/help/userValidate'),
+  config = require('../../config'),
   bcrypt = require('bcryptjs'),
-  salt = bcrypt.genSaltSync(10),
+  { magicNumberTen } = config.common.bcrypt,
+  salt = bcrypt.genSaltSync(Number(magicNumberTen)),
   servicesUser = require('../services/users'),
   error = require('../errors');
 
