@@ -1,6 +1,5 @@
 const request = require('supertest'),
   app = require('../app');
-
 describe('POST /user', () => {
   it('signUp User', done => {
     request(app)
