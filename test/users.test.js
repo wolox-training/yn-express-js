@@ -1,7 +1,8 @@
 const request = require('supertest'),
   app = require('../app');
+
 describe('User registration test, with their respective fields', () => {
-  it('he user should register with all the fields correctly', done => {
+  it('should register with all the fields correctly', done => {
     request(app)
       .post('/users')
       .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345*' })
@@ -13,7 +14,7 @@ describe('User registration test, with their respective fields', () => {
       });
   });
 
-  it('the user should not register because the email is incorrect', done => {
+  it('should not register because the email is incorrect', done => {
     request(app)
       .post('/users')
       .send({ name: 'yesica', lastName: 'nava', email: 'yesica.co', password: 'shdfgs345*' })
@@ -27,7 +28,7 @@ describe('User registration test, with their respective fields', () => {
       });
   });
 
-  it('the user should not register because the password is incorrect', done => {
+  it('should not register because the password is incorrect', done => {
     request(app)
       .post('/users')
       .send({ name: 'yesica', lastName: 'nava', email: 'yesica.co', password: 'err*' })
@@ -41,7 +42,7 @@ describe('User registration test, with their respective fields', () => {
       });
   });
 
-  it('the user should not register because no required parameter is sent', done => {
+  it('should not register because no required parameter is sent', done => {
     request(app)
       .post('/users')
       .send({})
