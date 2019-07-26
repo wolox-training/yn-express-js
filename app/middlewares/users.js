@@ -5,7 +5,7 @@ const { validationResult, check } = require('express-validator'),
 const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    logger.error(JSON.stringify(errors));
+    logger.error(errors.errors);
     next(error.validateUser(errors));
   }
   next();
