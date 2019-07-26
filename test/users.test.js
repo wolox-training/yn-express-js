@@ -1,6 +1,6 @@
 const request = require('supertest'),
   app = require('../app');
-describe('', () => {
+describe('User registration test, with their respective fields', () => {
   it('signUp User', done => {
     request(app)
       .post('/users')
