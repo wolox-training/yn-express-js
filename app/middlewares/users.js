@@ -1,20 +1,11 @@
-const { checkBody } = require('express-validator');
-
+const { validationResult } = require('express-validator'),
+  error = require('../errors'),
+  logger = require('../logger');
 exports.middlewareUsers = (req, res, next) => {
-  checkBody(req.body.name, 'Name is required').notEmpty();
-  const errors = req.validationErrors();
-  if (errors) {
-    req.session.errors = errors;
-    req.session.success = false;
-    res.redirect('/blockchain');
-  } else {
-    req.session.success = true;
-    res.redirect('/');
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    logger.error(JSON.stringify(errors));
+    throw error.signUpError(errors.errors);
   }
-
-  //   const errors = validateUser.validateUser(req);
-  //   if (errors.length > 0) {
-  //     throw error.validateUser(errors);
-  //   }
   next();
 };
