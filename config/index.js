@@ -46,7 +46,7 @@ const config = {
       url: process.env.URL_API_ALBUMS
     },
     bcrypt: {
-      magicNumberTen: process.env.BCRYPT_SALT
+      saltNumber: process.env.BCRYPT_SALT
     }
   }
 };
