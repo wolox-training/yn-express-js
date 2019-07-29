@@ -1,5 +1,6 @@
 const request = require('supertest'),
-  app = require('../app');
+  app = require('../app'),
+  dictum = require('dictum.js');
 
 describe('User registration test, with their respective fields', () => {
   it('should register with all the fields correctly', done => {
@@ -10,6 +11,7 @@ describe('User registration test, with their respective fields', () => {
       .then(response => {
         expect(response.statusCode).toBe(201);
         expect(response.text).toBe('the user was created correctly');
+        dictum.chai(response, 'should register with all the fields correctly');
         done();
       });
   });
