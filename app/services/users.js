@@ -16,3 +16,9 @@ exports.createUser = userData =>
       logger.error(`Could not create user: ${userData.name}`);
       throw error.databaseError(err.message);
     });
+
+exports.validatePassword = data =>
+  User.findOne({ where: { email: data.email }, attributes: ['email', 'password'] }).catch(errors => {
+    logger.error(error);
+    throw error.databaseError(errors.message);
+  });
