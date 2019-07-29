@@ -6,7 +6,7 @@ describe('User registration test, with their respective fields', () => {
   it('should register with all the fields correctly', done => {
     request(app)
       .post('/users')
-      .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345*' })
+      .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
       .set('Accept', 'application/json')
       .then(response => {
         expect(response.statusCode).toBe(201);
@@ -19,27 +19,47 @@ describe('User registration test, with their respective fields', () => {
   it('should not register because the email is incorrect', done => {
     request(app)
       .post('/users')
-      .send({ name: 'yesica', lastName: 'nava', email: 'yesica.co', password: 'shdfgs345*' })
+      .send({ name: 'yesica', lastName: 'nava', email: 'yesica.co', password: 'shdfgs345' })
       .set('Accept', 'application/json')
       .then(response => {
         expect(response.statusCode).toBe(400);
-        expect(response.body.message[0]).toBe(
-          'email yesica.co is not valid or does not belong to the wolox domain'
-        );
+        expect(response.body.message.msg).toBe('Invalid value');
         done();
       });
   });
 
-  it('should not register because the password is incorrect', done => {
+  it('should not register because the email not belong to the wolox domain', done => {
     request(app)
       .post('/users')
-      .send({ name: 'yesica', lastName: 'nava', email: 'yesica.co', password: 'err*' })
+      .send({ name: 'yesica', lastName: 'nava', email: 'yesica@gmail.co', password: 'shdfgs345' })
       .set('Accept', 'application/json')
       .then(response => {
         expect(response.statusCode).toBe(400);
-        expect(response.body.message[0]).toBe(
-          'email yesica.co is not valid or does not belong to the wolox domain'
-        );
+        expect(response.body.message.msg).toBe('email is not valid or does not belong to the wolox domain');
+        done();
+      });
+  });
+
+  it('should not register because the password not is alphanumeric', done => {
+    request(app)
+      .post('/users')
+      .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'err34*' })
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message.msg).toBe('Must be only alphanumeric chars');
+        done();
+      });
+  });
+
+  it('should not register because the password not 8 chars long', done => {
+    request(app)
+      .post('/users')
+      .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'err34' })
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message.msg).toBe('Must be at least 8 chars long');
         done();
       });
   });
