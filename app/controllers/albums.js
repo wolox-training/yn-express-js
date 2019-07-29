@@ -1,9 +1,9 @@
 const servicesAlbums = require('../services/albums'),
   config = require('../../config'),
   { url } = config.common.apiAlbums;
-let source = url;
 
 exports.getAlbums = (req, res, next) => {
+  let source = url;
   const idAlbum = req.params.id;
   source = idAlbum ? `${url}/albums/${idAlbum}` : `${url}/albums`;
   return servicesAlbums
@@ -13,6 +13,7 @@ exports.getAlbums = (req, res, next) => {
 };
 
 exports.getAlbumsPhotos = (req, res, next) => {
+  let source = url;
   const idAlbum = req.params.id;
   source = `${url}/photos?albumId=${idAlbum}`;
   return servicesAlbums
