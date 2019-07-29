@@ -19,3 +19,6 @@ exports.signUp = (req, res, next) => {
     })
     .catch(next);
 };
+exports.signIn = (req, res, next) => {
+  res.status(201).send(`${req} -- ${next} --`);
+};
