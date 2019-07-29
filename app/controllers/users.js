@@ -1,16 +1,10 @@
-const validateUser = require('../services/help/userValidate'),
-  config = require('../../config'),
+const config = require('../../config'),
   bcrypt = require('bcryptjs'),
   { saltNumber } = config.common.bcrypt,
   salt = bcrypt.genSaltSync(Number(saltNumber)),
-  servicesUser = require('../services/users'),
-  error = require('../errors');
+  servicesUser = require('../services/users');
 
 exports.signUp = (req, res, next) => {
-  const errors = validateUser.validateUser(req);
-  if (errors.length > 0) {
-    throw error.validateUser(errors);
-  }
   req.body.password = bcrypt.hashSync(req.body.password, salt);
   return servicesUser
     .createUser(req.body)
