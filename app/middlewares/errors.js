@@ -7,7 +7,7 @@ const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.ALBUMS_API_ERROR]: 503,
   [errors.SIGN_UP_ERROR]: 400,
-  [errors.SIGN_IN_ERROR]: 400,
+  [errors.SIGN_IN_ERROR]: 401,
   [errors.VALIDATE_USER]: 400,
   [errors.DEFAULT_ERROR]: 500
 };
