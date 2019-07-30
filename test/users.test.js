@@ -2,18 +2,20 @@ const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js');
 
+const testCreate = (email, password) =>
+  request(app)
+    .post('/users')
+    .send({ name: 'yesica', lastName: 'nava', email, password })
+    .set('Accept', 'application/json');
+
 describe('User registration test, with their respective fields', () => {
   it('should register with all the fields correctly', done => {
-    request(app)
-      .post('/users')
-      .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
-      .set('Accept', 'application/json')
-      .then(response => {
-        expect(response.statusCode).toBe(201);
-        expect(response.text).toBe('the user was created correctly');
-        dictum.chai(response, 'should register with all the fields correctly');
-        done();
-      });
+    testCreate('yesica@wolox.co', 'shdfgs345').then(response => {
+      expect(response.statusCode).toBe(201);
+      expect(response.text).toBe('the user was created correctly');
+      dictum.chai(response, 'should register with all the fields correctly');
+      done();
+    });
   });
 
   it('should not register because the email is incorrect', done => {
@@ -81,18 +83,43 @@ describe('User registration test, with their respective fields', () => {
         done();
       });
   });
+});
 
+describe('User sign in test, with their respective fields', () => {
   it('should sign in with all the fields correctly', done => {
-    // beforeEach(() => ({ password: 23232 }));
-    request(app)
-      .post('/users/sessions')
-      .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
-      .set('Accept', 'application/json')
-      .then(response => {
-        expect(response.statusCode).toBe(200);
-        expect(response.text).toBe('the sign in correctly');
-        dictum.chai(response, 'should sign in with all the fields correctly');
-        done();
-      });
+    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
+      request(app)
+        .post('/users/sessions')
+        .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+        .set('Accept', 'application/json')
+        .then(response => {
+          const token = {
+            token:
+              'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
+              'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8'
+          };
+          expect(response.statusCode).toBe(200);
+          expect(response.text).toString(token);
+          dictum.chai(response, 'should sign in with all the fields correctly');
+          done();
+        });
+    });
+  });
+
+  it('should not sign in with all the fields correctly', done => {
+    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
+      request(app)
+        .post('/users/sessions')
+        .send({ email: 'yesica@wolox.co', password: 'hagsdhjada45674' })
+        .set('Accept', 'application/json')
+        .then(response => {
+          const errorTest = {
+            message: 'email or password incorrect'
+          };
+          expect(response.statusCode).toBe(400);
+          expect(response.text).toString(errorTest);
+          done();
+        });
+    });
   });
 });
