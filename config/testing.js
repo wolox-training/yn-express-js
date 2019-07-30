@@ -8,9 +8,6 @@ exports.config = {
 
     session: {
       secret: 'some-super-secret'
-    },
-    jwt: {
-      secret: 'xxx'
     }
   }
 };
