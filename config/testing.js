@@ -5,7 +5,9 @@ exports.config = {
     database: {
       name: process.env.DB_NAME_TEST
     },
-
+    jwt: {
+      secret: process.env.SECRET
+    },
     session: {
       secret: 'some-super-secret'
     }
