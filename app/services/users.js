@@ -20,11 +20,6 @@ exports.createUser = userData =>
       throw error.databaseError(err.message);
     });
 
-// const findOneUser = data =>
-//   User.findOne({ where: { email: data.email }, attributes: ['email', 'password'] }).catch(err => {
-//     throw error.databaseError(err);
-//   });
-
 exports.signIn = data =>
   User.findOne({ where: { email: data.email }, attributes: ['email', 'password'] })
     .then(result => bcrypt.compare(data.password, result.password))

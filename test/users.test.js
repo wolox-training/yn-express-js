@@ -81,4 +81,18 @@ describe('User registration test, with their respective fields', () => {
         done();
       });
   });
+
+  it('should sign in with all the fields correctly', done => {
+    // beforeEach(() => ({ password: 23232 }));
+    request(app)
+      .post('/users/sessions')
+      .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(response.text).toBe('the sign in correctly');
+        dictum.chai(response, 'should sign in with all the fields correctly');
+        done();
+      });
+  });
 });
