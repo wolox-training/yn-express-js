@@ -23,9 +23,9 @@ exports.signIn = (req, res, next) =>
 
 exports.userList = (req, res, next) => {
   const Authorization = req.header('Authorization');
-  const validate = servicesUser.validateToken(Authorization);
+  const email = servicesUser.validateToken(Authorization);
   return servicesUser
-    .validateEmail(req, validate)
+    .userList(req, email)
     .then(result => result)
     .then(results => {
       res.status(200).send(results);

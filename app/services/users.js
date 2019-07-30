@@ -47,7 +47,7 @@ const userList = ({ page, pageSize }) => {
     });
 };
 
-exports.validateEmail = (req, email) =>
+exports.userList = (req, email) =>
   User.findAndCountAll({ where: { email } }).then(result => {
     if (result.count !== 1) {
       throw error.databaseError('invalid Token ');
