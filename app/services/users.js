@@ -50,7 +50,7 @@ const userList = ({ page, pageSize }) => {
 exports.validateEmail = (req, email) =>
   User.findAndCountAll({ where: { email } }).then(result => {
     if (result.count !== 1) {
-      throw error.databaseError('email not exists in database');
+      throw error.databaseError('invalid Token ');
     }
     return userList(req.params);
   });
