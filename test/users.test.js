@@ -99,7 +99,6 @@ describe('User sign in test, with their respective fields', () => {
               'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8'
           };
           expect(response.statusCode).toBe(200);
-          console.log(response.text);
           expect(response.text).toString(token);
           dictum.chai(response, 'should sign in with all the fields correctly');
           done();

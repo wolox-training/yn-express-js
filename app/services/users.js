@@ -3,8 +3,8 @@ const { User } = require('../models'),
   logger = require('../logger'),
   bcrypt = require('bcryptjs'),
   jwt = require('jwt-simple'),
-  config = require('../../config'),
-  { secret } = config.common.jwt;
+  configDevelopment = require('../../config'),
+  { secret } = configDevelopment.common.jwt;
 
 exports.createUser = userData =>
   User.create(userData)
