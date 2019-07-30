@@ -34,3 +34,17 @@ exports.signIn = ({ email, password }) =>
       const token = jwt.encode(bodyToken, secret);
       return token;
     });
+
+exports.validateEmail = email =>
+  User.findAndCountAll({ where: { email } }).then(result => {
+    let exist = false;
+    if (result.count === 1) {
+      exist = true;
+    }
+    return exist;
+  });
+
+exports.validateToken = Authorization => {
+  const decoded = jwt.decode(Authorization, secret);
+  return decoded.email;
+};

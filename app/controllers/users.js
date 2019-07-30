@@ -21,6 +21,15 @@ exports.signIn = (req, res, next) =>
     })
     .catch(next);
 
-// exports.signIn = (req, res, next) => {
-//   console.log(`${req.params} --next: ${next}`);
-// };
+exports.userList = (req, res, next) => {
+  const Authorization = req.header('Authorization');
+  const validate = servicesUser.validateToken(Authorization);
+  return servicesUser
+    .validateEmail(validate)
+    .then(result => {
+      console.log(result);
+      // si es true listar usuarios
+      res.status(200).send(result.rows);
+    })
+    .catch(next);
+};
