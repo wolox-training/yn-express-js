@@ -20,3 +20,7 @@ exports.signIn = (req, res, next) =>
       res.status(200).send({ token });
     })
     .catch(next);
+
+// exports.signIn = (req, res, next) => {
+//   console.log(`${req.params} --next: ${next}`);
+// };
