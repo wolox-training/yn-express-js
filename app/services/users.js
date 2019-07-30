@@ -3,7 +3,8 @@ const { User } = require('../models'),
   logger = require('../logger'),
   bcrypt = require('bcryptjs'),
   jwt = require('jwt-simple'),
-  secret = 'xxx';
+  config = require('../../config'),
+  { secret } = config.common.jwt;
 
 exports.createUser = userData =>
   User.create(userData)
@@ -20,15 +21,15 @@ exports.createUser = userData =>
       throw error.databaseError(err.message);
     });
 
-exports.signIn = data =>
-  User.findOne({ where: { email: data.email }, attributes: ['email', 'password'] })
-    .then(result => bcrypt.compare(data.password, result.password))
+exports.signIn = ({ email, password }) =>
+  User.findOne({ where: { email }, attributes: ['email', 'password'] })
+    .then(result => bcrypt.compare(password, result.password))
     .then(results => {
       if (results !== true) {
         throw error.signInError('email or password incorrect');
       }
       const bodyToken = {
-        email: data.email
+        email
       };
       const token = jwt.encode(bodyToken, secret);
       return token;
