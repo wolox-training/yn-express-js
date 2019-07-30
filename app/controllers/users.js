@@ -25,11 +25,10 @@ exports.userList = (req, res, next) => {
   const Authorization = req.header('Authorization');
   const validate = servicesUser.validateToken(Authorization);
   return servicesUser
-    .validateEmail(validate)
-    .then(result => {
-      console.log(result);
-      // si es true listar usuarios
-      res.status(200).send(result.rows);
+    .validateEmail(req, validate)
+    .then(result => result)
+    .then(results => {
+      res.status(200).send(results);
     })
     .catch(next);
 };

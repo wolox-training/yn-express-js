@@ -35,13 +35,24 @@ exports.signIn = ({ email, password }) =>
       return token;
     });
 
-exports.validateEmail = email =>
+const userList = ({ page, pageSize }) => {
+  const pageCal = page === undefined ? 0 : page;
+  const pageSizeCal = pageSize === undefined ? 5 : pageSize;
+  const offset = pageSizeCal * pageCal,
+    limit = pageSizeCal;
+  return User.findAll({ offset, limit, where: {} })
+    .then(result => result)
+    .catch(err => {
+      throw error.databaseError(err.message);
+    });
+};
+
+exports.validateEmail = (req, email) =>
   User.findAndCountAll({ where: { email } }).then(result => {
-    let exist = false;
-    if (result.count === 1) {
-      exist = true;
+    if (result.count !== 1) {
+      throw error.databaseError('email not exists in database');
     }
-    return exist;
+    return userList(req.params);
   });
 
 exports.validateToken = Authorization => {
