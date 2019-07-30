@@ -116,7 +116,7 @@ describe('User sign in test, with their respective fields', () => {
           const errorTest = {
             message: 'email or password incorrect'
           };
-          expect(response.statusCode).toBe(400);
+          expect(response.statusCode).toBe(401);
           expect(response.text).toString(errorTest);
           done();
         });
