@@ -21,14 +21,11 @@ exports.signIn = (req, res, next) =>
     })
     .catch(next);
 
-exports.userList = (req, res, next) => {
-  const Authorization = req.header('Authorization');
-  const email = servicesUser.validateToken(Authorization);
-  return servicesUser
-    .userList(req, email)
+exports.userList = (req, res, next) =>
+  servicesUser
+    .userList(req.params)
     .then(result => result)
     .then(results => {
       res.status(200).send(results);
     })
     .catch(next);
-};

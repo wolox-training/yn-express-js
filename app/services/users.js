@@ -35,7 +35,7 @@ exports.signIn = ({ email, password }) =>
       return token;
     });
 
-const userList = ({ page, pageSize }) => {
+exports.userList = ({ page, pageSize }) => {
   const pageCal = page === undefined ? 0 : page;
   const pageSizeCal = pageSize === undefined ? 5 : pageSize;
   const offset = pageSizeCal * pageCal,
@@ -47,15 +47,11 @@ const userList = ({ page, pageSize }) => {
     });
 };
 
-exports.userList = (req, email) =>
-  User.findAndCountAll({ where: { email } }).then(result => {
+exports.validateToken = Authorization => {
+  const { email } = jwt.decode(Authorization, secret);
+  return User.findAndCountAll({ where: { email } }).then(result => {
     if (result.count !== 1) {
       throw error.databaseError('invalid Token ');
     }
-    return userList(req.params);
   });
-
-exports.validateToken = Authorization => {
-  const decoded = jwt.decode(Authorization, secret);
-  return decoded.email;
 };
