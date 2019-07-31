@@ -3,6 +3,9 @@ exports.config = {
   common: {
     database: {
       name: process.env.DB_NAME_DEV
+    },
+    jwt: {
+      secret: process.env.SECRET
     }
   },
   isDevelopment: true
