@@ -49,7 +49,7 @@ exports.validateToken = Authorization => {
   const { email } = jwt.decode(Authorization, secret);
   return User.findAndCountAll({ where: { email } }).then(result => {
     if (result.count !== 1) {
-      throw error.databaseError('invalid Token ');
+      throw error.validateTokenError('invalid Token ');
     }
   });
 };

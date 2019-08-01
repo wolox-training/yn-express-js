@@ -9,7 +9,8 @@ const statusCodes = {
   [errors.SIGN_UP_ERROR]: 400,
   [errors.SIGN_IN_ERROR]: 401,
   [errors.VALIDATE_USER_ERROR]: 400,
-  [errors.DEFAULT_ERROR]: 500
+  [errors.DEFAULT_ERROR]: 500,
+  [errors.VALIDATE_TOKEN_ERROR]: 400
 };
 
 exports.handle = (error, req, res, next) => {
