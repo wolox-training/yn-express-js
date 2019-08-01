@@ -2,6 +2,19 @@ const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js');
 
+const resultUserList = [
+  {
+    id: 1,
+    name: 'yesica',
+    lastName: 'nava',
+    email: 'yesica@wolox.co',
+    password: '$2a$10$2I6Lrhhs6cd7PNl10qV6YueEU8yL.2D1E4Y8BUG6Pja5sswhindG6',
+    created_at: '2019-07-25T21:50:47.143Z',
+    updated_at: '2019-07-25T21:50:47.143Z',
+    deleted_at: null
+  }
+];
+
 const testCreate = (email, password) =>
   request(app)
     .post('/users')
@@ -121,5 +134,67 @@ describe('User sign in test, with their respective fields', () => {
           done();
         });
     });
+  });
+});
+
+describe('user list test', () => {
+  it('should get the user list', done => {
+    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
+      const token =
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
+        'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+      request(app)
+        .get('/users?page=1&pageSize=5')
+        .set({ Accept: 'application/json', Authorization: token })
+        .then(response => {
+          expect(response.statusCode).toBe(200);
+          expect(response.text).toString(resultUserList);
+          dictum.chai(response, 'should sign in with all the fields correctly');
+          done();
+        });
+    });
+  });
+
+  it('should get the list of users with the parameter = page', done => {
+    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
+      const token =
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
+        'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+      request(app)
+        .get('/users?page=1')
+        .set({ Accept: 'application/json', Authorization: token })
+        .then(response => {
+          expect(response.statusCode).toBe(200);
+          expect(response.text).toString(resultUserList);
+          done();
+        });
+    });
+  });
+
+  it('should get the list of users with the parameter = page and pageSize', done => {
+    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
+      const token =
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
+        'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+      request(app)
+        .get('/users?page=1&?pageSize=7')
+        .set({ Accept: 'application/json', Authorization: token })
+        .then(response => {
+          expect(response.statusCode).toBe(200);
+          expect(response.text).toString(resultUserList);
+          done();
+        });
+    });
+  });
+
+  it('should not get user list', done => {
+    request(app)
+      .get('/users')
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message.msg).toBe('Authorization is required');
+        done();
+      });
   });
 });

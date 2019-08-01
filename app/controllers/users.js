@@ -20,3 +20,9 @@ exports.signIn = (req, res, next) =>
       res.status(200).send({ token });
     })
     .catch(next);
+
+exports.userList = (req, res, next) =>
+  servicesUser
+    .userList(req.query)
+    .then(results => res.status(200).send(results))
+    .catch(next);

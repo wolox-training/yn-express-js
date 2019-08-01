@@ -1,6 +1,7 @@
 const { validationResult, check } = require('express-validator'),
   error = require('../errors'),
-  logger = require('../logger');
+  logger = require('../logger'),
+  servicesUser = require('../services/users');
 
 const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
@@ -51,4 +52,18 @@ exports.signInMiddleware = [
     .isEmpty()
     .withMessage('password is required'),
   validateRequest
+];
+
+exports.validateTokenMiddleware = [
+  check('Authorization')
+    .not()
+    .isEmpty()
+    .withMessage('Authorization is required'),
+  validateRequest,
+  (req, res, next) => {
+    servicesUser
+      .validateToken(req.header('Authorization'))
+      .then(next)
+      .catch(next);
+  }
 ];

@@ -34,3 +34,22 @@ exports.signIn = ({ email, password }) =>
       const token = jwt.encode(bodyToken, secret);
       return token;
     });
+
+exports.userList = ({ page = 0, pageSize = 5 }) => {
+  const offset = pageSize * page,
+    limit = pageSize;
+  return User.findAll({ offset, limit })
+    .then(result => result)
+    .catch(err => {
+      throw error.databaseError(err.message);
+    });
+};
+
+exports.validateToken = Authorization => {
+  const { email } = jwt.decode(Authorization, secret);
+  return User.findAndCountAll({ where: { email } }).then(result => {
+    if (result.count !== 1) {
+      throw error.validateTokenError('invalid Token ');
+    }
+  });
+};
