@@ -6,7 +6,12 @@ const { User } = require('../models'),
   configDevelopment = require('../../config'),
   { secret } = configDevelopment.common.jwt;
 
-exports.createUser = userData =>
+const existUser = email =>
+  User.findAndCountAll({ where: { email } }).catch(err => {
+    throw error.databaseError(err.message);
+  });
+
+const createDB = userData =>
   User.create(userData)
     .then(result => {
       logger.info(`the user was created correctly: ${userData.name}`);
@@ -21,26 +26,14 @@ exports.createUser = userData =>
       throw error.databaseError(err.message);
     });
 
-exports.signIn = ({ email, password }) =>
-  User.findOne({ where: { email }, attributes: ['email', 'password'] })
-    .then(result => bcrypt.compare(password, result.password))
-    .then(results => {
-      if (results !== true) {
-        throw error.signInError('email or password incorrect');
-      }
-      const bodyToken = {
-        email
-      };
-      const token = jwt.encode(bodyToken, secret);
-      return token;
-    });
-
-exports.userList = ({ page = 0, pageSize = 5 }) => {
-  const offset = pageSize * page,
-    limit = pageSize;
-  return User.findAll({ offset, limit })
-    .then(result => result)
+const updateDB = userData => {
+  User.update(userData, { where: { email: userData.email } })
+    .then(result => {
+      logger.info(`the user was update correctly: ${userData.name}`);
+      return result;
+    })
     .catch(err => {
+      logger.error(`Could not update user: ${name}`);
       throw error.databaseError(err.message);
     });
 };
@@ -52,4 +45,58 @@ exports.validateToken = Authorization => {
       throw error.validateTokenError('invalid Token ');
     }
   });
+};
+
+exports.isAdministrator = Authorization => {
+  const { administrator } = jwt.decode(Authorization, secret);
+  return administrator;
+};
+
+exports.createUser = userData =>
+  createDB(userData).catch(err => {
+    throw error.databaseError(err.message);
+  });
+
+exports.signIn = ({ email, password }) => {
+  let isAdministratorQuery = false;
+  return User.findOne({ where: { email }, attributes: ['email', 'password', 'administrator'] })
+    .then(result => {
+      isAdministratorQuery = result.administrator;
+      return bcrypt.compare(password, result.password);
+    })
+    .then(compare => {
+      if (compare !== true) {
+        throw error.signInError('email or password incorrect');
+      }
+      const bodyToken = {
+        email,
+        administrator: isAdministratorQuery
+      };
+      const token = jwt.encode(bodyToken, secret);
+      return token;
+    });
+};
+
+exports.userList = ({ page = 0, pageSize = 5 }) => {
+  const offset = pageSize * page,
+    limit = pageSize;
+  return User.findAll({ offset, limit })
+    .then(result => result)
+    .catch(err => {
+      throw error.databaseError(err.message);
+    });
+};
+
+exports.createUserAdmin = userData => {
+  userData.administrator = true;
+  return existUser(userData.email)
+    .then(result => {
+      if (result.count === 1) {
+        return updateDB(userData);
+      }
+      return createDB(userData);
+    })
+    .catch(err => {
+      throw error.createAdminError(err.message);
+    });
 };
