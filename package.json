@@ -61,6 +61,7 @@
     "express": "^4.16.2",
     "express-validator": "^6.1.1",
     "express-wolox-logger": "0.0.2",
+    "factory-girl": "^5.0.4",
     "jwt-simple": "^0.5.1",
     "pg": "^7.4.1",
     "request": "^2.88.0",

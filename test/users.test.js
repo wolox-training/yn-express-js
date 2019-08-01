@@ -1,6 +1,7 @@
 const request = require('supertest'),
   app = require('../app'),
-  dictum = require('dictum.js');
+  dictum = require('dictum.js'),
+  { factoryCreate } = require('../app/utilities');
 
 const resultUserList = [
   {
@@ -195,6 +196,65 @@ describe('user list test', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.message.msg).toBe('Authorization is required');
         done();
+      });
+  });
+});
+
+describe('register administrator', () => {
+  beforeEach(() =>
+    factoryCreate({
+      name: 'sofia',
+      lastName: 'arismendy',
+      email: 'sofia@wolox.co',
+      password: 'yuli35624',
+      administrator: true
+    })
+  );
+  it('should register administrator with all the fields correctly', done => {
+    request(app)
+      .post('/users/sessions')
+      .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
+      .set('Accept', 'application/json')
+      .then(response => {
+        request(app)
+          .post('/admin/users')
+          .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
+          .set({ Accept: 'application/json', Authorization: response.body.token })
+          .then(result => {
+            expect(result.statusCode).toBe(201);
+            expect(result.text).toBe('the administrator user was created correctly');
+            dictum.chai(response, 'should register administrator with all the fields correctly');
+            done();
+          });
+      });
+  });
+});
+
+describe('user register, with user without permissions that does not have permissions', () => {
+  beforeEach(() =>
+    factoryCreate({
+      name: 'sofia',
+      lastName: 'arismendy',
+      email: 'sofia@wolox.co',
+      password: 'yuli35624',
+      isAdministrator: false
+    })
+  );
+  it('should not sign up administrator', done => {
+    request(app)
+      .post('/users/sessions')
+      .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
+      .set('Accept', 'application/json')
+      .then(response => {
+        request(app)
+          .post('/admin/users')
+          .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
+          .set({ Accept: 'application/json', Authorization: response.body.token })
+          .then(result => {
+            expect(result.statusCode).toBe(503);
+            expect(result.body.message).toBe('You do not have permissions to perform this operation');
+            done();
+          });
       });
   });
 });
