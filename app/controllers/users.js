@@ -23,9 +23,6 @@ exports.signIn = (req, res, next) =>
 
 exports.userList = (req, res, next) =>
   servicesUser
-    .userList(req.params)
-    .then(result => result)
-    .then(results => {
-      res.status(200).send(results);
-    })
+    .userList(req.query)
+    .then(results => res.status(200).send(results))
     .catch(next);

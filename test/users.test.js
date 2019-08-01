@@ -161,7 +161,7 @@ describe('user list test', () => {
         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
         'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
       request(app)
-        .get('/users/1')
+        .get('/users?page=1')
         .set({ Accept: 'application/json', Authorization: token })
         .then(response => {
           expect(response.statusCode).toBe(200);
@@ -177,7 +177,7 @@ describe('user list test', () => {
         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
         'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
       request(app)
-        .get('/users/1/3')
+        .get('/users?page=1&?pageSize=7')
         .set({ Accept: 'application/json', Authorization: token })
         .then(response => {
           expect(response.statusCode).toBe(200);

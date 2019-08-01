@@ -35,12 +35,10 @@ exports.signIn = ({ email, password }) =>
       return token;
     });
 
-exports.userList = ({ page, pageSize }) => {
-  const pageCal = page === undefined ? 0 : page;
-  const pageSizeCal = pageSize === undefined ? 5 : pageSize;
-  const offset = pageSizeCal * pageCal,
-    limit = pageSizeCal;
-  return User.findAll({ offset, limit, where: {} })
+exports.userList = ({ page = 0, pageSize = 5 }) => {
+  const offset = pageSize * page,
+    limit = pageSize;
+  return User.findAll({ offset, limit })
     .then(result => result)
     .catch(err => {
       throw error.databaseError(err.message);
