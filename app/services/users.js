@@ -26,8 +26,8 @@ const createDB = userData =>
       throw error.databaseError(err.message);
     });
 
-const updateDB = userData => {
-  User.update(userData, { where: { email: userData.email } })
+const upsert = userData => {
+  User.upsert(userData, { where: { email: userData.email } })
     .then(result => {
       logger.info(`the user was update correctly: ${userData.name}`);
       return result;
@@ -90,12 +90,7 @@ exports.userList = ({ page = 0, pageSize = 5 }) => {
 exports.createUserAdmin = userData => {
   userData.administrator = true;
   return existUser(userData.email)
-    .then(result => {
-      if (result.count === 1) {
-        return updateDB(userData);
-      }
-      return createDB(userData);
-    })
+    .then(() => upsert(userData))
     .catch(err => {
       throw error.createAdminError(err.message);
     });
