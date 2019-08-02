@@ -1,6 +1,10 @@
 const { validationResult, check } = require('express-validator'),
   error = require('../errors'),
-  logger = require('../logger');
+  logger = require('../logger'),
+  servicesUser = require('../services/users'),
+  jwt = require('jwt-simple'),
+  configDevelopment = require('../../config'),
+  { secret } = configDevelopment.common.jwt;
 
 const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
@@ -51,4 +55,28 @@ exports.signInMiddleware = [
     .isEmpty()
     .withMessage('password is required'),
   validateRequest
+];
+
+exports.isAdministratorMiddleware = [
+  (req, res, next) => {
+    if (req.body.decode.administrator !== true) {
+      throw error.databaseError('You do not have permissions to perform this operation');
+    }
+    return next();
+  }
+];
+
+exports.validateTokenMiddleware = [
+  check('Authorization')
+    .not()
+    .isEmpty()
+    .withMessage('Authorization is required'),
+  validateRequest,
+  (req, res, next) => {
+    req.body.decode = jwt.decode(req.header('Authorization'), secret);
+    return servicesUser
+      .validateToken(req.body.decode)
+      .then(next)
+      .catch(next);
+  }
 ];
