@@ -4,43 +4,51 @@ const request = require('request-promise'),
   config = require('../../config'),
   error = require('../errors'),
   urlApi = config.common.apiAlbums.url,
+  { User } = require('../models'),
   { Album } = require('../models');
 
-const upsert = userData =>
-  Album.upsert(userData, { where: { id: userData.id } })
-    .then(() => {
-      logger.info('purchase made with success');
-      return 'purchase made with success';
-    })
+const createAlbums = userData =>
+  Album.create(userData)
+    .then(() => `the album was created correctly '${userData.name}'`)
     .catch(err => {
-      logger.error('could not carry out the purchase');
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        logger.error('you cannot buy this album againn');
+        throw error.buyAlbumsError('you cannot buy this album again');
+      }
       throw error.databaseError(err.message);
     });
 
-const getAlbum = async url => {
-  try {
-    const result = await request(url);
-    console.log(`result: ${result}`);
-    return result;
-  } catch (err) {
-    throw error.signInError(err);
-  }
+const getAlbum = url => {
+  const options = {
+    uri: url,
+    json: true
+  };
+  return request(options).catch(err => {
+    logger.error(err);
+    throw errors.albumsApiError(err.message);
+  });
 };
+
 exports.getAlbums = url => getAlbum(url);
 
-exports.buyAlbums = req => {
-  const source = `${urlApi}/albums/${req.params.id}`;
-  const album = getAlbum(source);
-  console.log(`album : ${album}`);
-  if (!album) {
-    throw errors.albumsApiError('Album does not exist');
+exports.buyAlbums = async req => {
+  try {
+    const source = `${urlApi}/albums/${req.params.id}`;
+    const result = await User.findOne({
+      where: { email: req.body.decode.email },
+      attributes: ['id']
+    });
+    const albums = await getAlbum(source);
+    if (!albums) {
+      throw errors.buyAlbumsError('Album does not exist');
+    }
+    const albumsUser = {
+      albumId: albums.id,
+      userId: result.id,
+      name: albums.title
+    };
+    return createAlbums(albumsUser);
+  } catch (err) {
+    throw error.buyAlbumsError(err);
   }
-  console.log(album);
-  const albumsUser = {
-    id: 1,
-    userId: 5,
-    name: album.title
-  };
-  console.log(albumsUser);
-  return upsert(albumsUser);
 };

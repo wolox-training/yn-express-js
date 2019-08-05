@@ -8,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
+      albumId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'album_id'
+      },
       name: {
         type: DataTypes.STRING
       },
@@ -23,5 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'albums'
     }
   );
+  Album.associate = models => {
+    Album.belongsTo(models.User, {
+      foreignKey: 'user_id'
+    });
+  };
   return Album;
 };

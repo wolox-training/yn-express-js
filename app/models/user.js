@@ -34,12 +34,8 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'users'
     }
   );
-  User.associate(models => {
-    User.belongsTo(models.albums, {
-      foreignKey: 'user_id',
-      onDelete: 'CASCADE'
-    });
-  });
-
+  User.associate = models => {
+    User.hasMany(models.Album, { as: 'Albums' });
+  };
   return User;
 };
