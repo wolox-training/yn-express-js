@@ -19,3 +19,9 @@ exports.getAlbumsPhotos = (req, res, next) => {
     .then(albumsPhotos => res.send({ albumsPhotos }))
     .catch(next);
 };
+
+exports.buyAlbums = (req, res, next) =>
+  servicesAlbums
+    .buyAlbums(req)
+    .then(albums => res.send({ albums }))
+    .catch(next);
