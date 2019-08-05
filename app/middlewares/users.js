@@ -57,14 +57,12 @@ exports.signInMiddleware = [
   validateRequest
 ];
 
-exports.isAdministratorMiddleware = [
-  (req, res, next) => {
-    if (req.body.decode.administrator !== true) {
-      throw error.databaseError('You do not have permissions to perform this operation');
-    }
-    return next();
+exports.isAdministratorMiddleware = (req, res, next) => {
+  if (req.body.decode.administrator !== true) {
+    throw error.validateTokenError('You do not have permissions to perform this operation');
   }
-];
+  next();
+};
 
 exports.validateTokenMiddleware = [
   check('Authorization')

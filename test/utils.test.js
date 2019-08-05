@@ -24,4 +24,4 @@ factory.define(
 );
 
 exports.factoryCreate = ({ name, lastName, email, password, administrator }) =>
-  factory.create('User', { name, lastName, email, password, administrator }).then(user => user);
+  factory.create('User', { name, lastName, email, password, administrator });

@@ -247,7 +247,7 @@ describe('administrator user registrar with the correct fields', () => {
             .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
             .set({ Accept: 'application/json', Authorization: tokenResponse.token })
             .then(result => {
-              expect(result.statusCode).toBe(503);
+              expect(result.statusCode).toBe(401);
               expect(result.body.message).toBe('You do not have permissions to perform this operation');
               done();
             });
