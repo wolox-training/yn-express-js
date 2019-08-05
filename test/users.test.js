@@ -200,62 +200,58 @@ describe('user list test', () => {
   });
 });
 
-describe('register administrator, with their respective fields', () => {
-  beforeEach(() =>
+describe('administrator user registrar with the correct fields', () => {
+  it('should register administrator with all the fields correctly', done => {
     factoryCreate({
       name: 'sofia',
       lastName: 'arismendy',
       email: 'sofia@wolox.co',
       password: 'yuli35624',
       administrator: true
-    })
-  );
-  it('should register administrator with all the fields correctly', done => {
-    request(app)
-      .post('/users/sessions')
-      .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
-      .set('Accept', 'application/json')
-      .then(response => {
-        const tokenResponse = JSON.parse(response.text);
-        request(app)
-          .post('/admin/users')
-          .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
-          .set({ Accept: 'application/json', Authorization: tokenResponse.token })
-          .then(result => {
-            expect(result.statusCode).toBe(201);
-            expect(result.text).toBe('the administrator user was created correctly');
-            dictum.chai(response, 'should register administrator with all the fields correctly');
-            done();
-          });
-      });
+    }).then(() =>
+      request(app)
+        .post('/users/sessions')
+        .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
+        .set('Accept', 'application/json')
+        .then(response => {
+          const tokenResponse = JSON.parse(response.text);
+          request(app)
+            .post('/admin/users')
+            .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
+            .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+            .then(result => {
+              expect(result.statusCode).toBe(201);
+              expect(result.text).toBe('the administrator user was created correctly');
+              dictum.chai(response, 'should register administrator with all the fields correctly');
+              done();
+            });
+        })
+    );
   });
-});
-describe('user register, with user without permissions that does not have permissions', () => {
-  beforeEach(() =>
+  it('you must not register administrator without permissions', done => {
     factoryCreate({
       name: 'sofia',
       lastName: 'arismendy',
       email: 'sofia@wolox.co',
       password: 'yuli35624',
       administrator: false
-    })
-  );
-  it('should not sign up administrator', done => {
-    request(app)
-      .post('/users/sessions')
-      .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
-      .set('Accept', 'application/json')
-      .then(response => {
-        const tokenResponse = JSON.parse(response.text);
-        request(app)
-          .post('/admin/users')
-          .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
-          .set({ Accept: 'application/json', Authorization: tokenResponse.token })
-          .then(result => {
-            expect(result.statusCode).toBe(503);
-            expect(result.body.message).toBe('You do not have permissions to perform this operation');
-            done();
-          });
-      });
+    }).then(() =>
+      request(app)
+        .post('/users/sessions')
+        .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
+        .set('Accept', 'application/json')
+        .then(response => {
+          const tokenResponse = JSON.parse(response.text);
+          request(app)
+            .post('/admin/users')
+            .send({ name: 'yesica', lastName: 'nava', email: 'yesica@wolox.co', password: 'shdfgs345' })
+            .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+            .then(result => {
+              expect(result.statusCode).toBe(503);
+              expect(result.body.message).toBe('You do not have permissions to perform this operation');
+              done();
+            });
+        })
+    );
   });
 });
