@@ -18,11 +18,15 @@ const upsert = userData =>
     });
 
 exports.validateToken = ({ email }) =>
-  User.findAndCountAll({ where: { email } }).then(result => {
-    if (result.count !== 1) {
-      throw error.validateTokenError('invalid Token ');
-    }
-  });
+  User.findAndCountAll({ where: { email } })
+    .then(result => {
+      if (result.count !== 1) {
+        throw error.validateTokenError('invalid Token ');
+      }
+    })
+    .catch(err => {
+      throw error.databaseError(err.message);
+    });
 
 exports.createUser = userData =>
   User.create(userData)

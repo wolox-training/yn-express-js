@@ -9,7 +9,7 @@ const { validationResult, check } = require('express-validator'),
 const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    logger.error(JSON.stringify(errors.errors[0]));
+    logger.error(errors.errors[0]);
     next(error.validateUserError(errors.errors[0]));
   }
   next();
@@ -57,14 +57,12 @@ exports.signInMiddleware = [
   validateRequest
 ];
 
-exports.isAdministratorMiddleware = [
-  (req, res, next) => {
-    if (req.body.decode.administrator !== true) {
-      throw error.databaseError('You do not have permissions to perform this operation');
-    }
-    return next();
+exports.isAdministratorMiddleware = (req, res, next) => {
+  if (req.body.decode.administrator !== true) {
+    throw error.validateTokenError('You do not have permissions to perform this operation');
   }
-];
+  next();
+};
 
 exports.validateTokenMiddleware = [
   check('Authorization')
