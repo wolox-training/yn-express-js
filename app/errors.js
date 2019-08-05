@@ -12,6 +12,9 @@ exports.albumsApiError = message => internalError(message, exports.ALBUMS_API_ER
 exports.SIGN_UP_ERROR = 'sign_up_error';
 exports.signUpError = message => internalError(message, exports.SIGN_UP_ERROR);
 
+exports.CREATE_ADMIN_ERROR = 'create_admin_error';
+exports.createAdminError = message => internalError(message, exports.CREATE_ADMIN_ERROR);
+
 exports.SIGN_IN_ERROR = 'sign_in_error';
 exports.signInError = message => internalError(message, exports.SIGN_IN_ERROR);
 

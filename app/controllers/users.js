@@ -26,3 +26,11 @@ exports.userList = (req, res, next) =>
     .userList(req.query)
     .then(results => res.status(200).send(results))
     .catch(next);
+
+exports.signUpAdministrator = (req, res, next) => {
+  req.body.password = bcrypt.hashSync(req.body.password, salt);
+  return servicesUser
+    .createUserAdmin(req.body)
+    .then(() => res.status(201).send('the administrator user was created correctly'))
+    .catch(next);
+};
