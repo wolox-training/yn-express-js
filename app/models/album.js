@@ -2,12 +2,6 @@ module.exports = (sequelize, DataTypes) => {
   const Album = sequelize.define(
     'Album',
     {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER
-      },
       albumId: {
         allowNull: false,
         type: DataTypes.INTEGER,
@@ -28,10 +22,12 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'albums'
     }
   );
+
   Album.associate = models => {
     Album.belongsTo(models.User, {
-      foreignKey: 'user_id'
+      foreignKey: 'userId'
     });
   };
+
   return Album;
 };

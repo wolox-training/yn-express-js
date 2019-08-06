@@ -9,12 +9,8 @@ const request = require('request-promise'),
 
 const createAlbums = userData =>
   Album.create(userData)
-    .then(() => `the album was created correctly '${userData.name}'`)
+    .then(() => `the album '${userData.name}' was purchased correctly`)
     .catch(err => {
-      if (err.name === 'SequelizeUniqueConstraintError') {
-        logger.error('you cannot buy this album againn');
-        throw error.buyAlbumsError('you cannot buy this album again');
-      }
       throw error.databaseError(err.message);
     });
 
@@ -29,25 +25,54 @@ const getAlbum = url => {
   });
 };
 
+const albumPurchased = (albumId, userId) =>
+  Album.findAndCountAll({
+    where: { albumId, userId },
+    attributes: ['id']
+  })
+    .then(result => {
+      let exist = false;
+      if (result.count !== 0) {
+        exist = true;
+      }
+      return exist;
+    })
+    .catch(err => {
+      throw error.databaseError(err.message);
+    });
+
+const getUser = email =>
+  User.findOne({
+    where: { email },
+    attributes: ['id']
+  }).catch(err => {
+    throw error.databaseError(err.message);
+  });
+
 exports.getAlbums = url => getAlbum(url);
 
 exports.buyAlbums = async req => {
   try {
-    const source = `${urlApi}/albums/${req.params.id}`;
-    const result = await User.findOne({
-      where: { email: req.body.decode.email },
-      attributes: ['id']
-    });
-    const albums = await getAlbum(source);
+    const albumId = req.params.id,
+      source = `${urlApi}/albums/${albumId}`,
+      user = await getUser(req.body.decode.email),
+      albums = await getAlbum(source);
+
     if (!albums) {
       throw errors.buyAlbumsError('Album does not exist');
     }
-    const albumsUser = {
+
+    const purchasedAlbum = await albumPurchased(albumId, user.id);
+
+    if (purchasedAlbum !== false) {
+      throw errors.buyAlbumsError('you cannot buy this album again');
+    }
+
+    return createAlbums({
       albumId: albums.id,
-      userId: result.id,
+      userId: user.id,
       name: albums.title
-    };
-    return createAlbums(albumsUser);
+    });
   } catch (err) {
     throw error.buyAlbumsError(err);
   }

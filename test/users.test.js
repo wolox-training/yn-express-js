@@ -1,7 +1,8 @@
 const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js'),
-  { factoryCreate } = require('../test/utils.test');
+  { factoryCreate, factoryCreateAlbums } = require('../test/utils.test'),
+  { Album, User } = require('../app/models');
 
 const resultUserList = [
   {
@@ -253,5 +254,24 @@ describe('administrator user registrar with the correct fields', () => {
             });
         })
     );
+  });
+
+  it.only('test associate albums and users', done => {
+    factoryCreate()
+      .then(() =>
+        factoryCreateAlbums({
+          albumId: 1,
+          userId: 1
+        })
+      )
+      .then(() =>
+        Album.findOne({
+          include: [User]
+        })
+      )
+      .then(result => {
+        console.log(result.dataValues);
+        done();
+      });
   });
 });
