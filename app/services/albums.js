@@ -77,3 +77,5 @@ exports.buyAlbums = async req => {
     throw error.buyAlbumsError(err);
   }
 };
+
+exports.getAlbum = getAlbum;

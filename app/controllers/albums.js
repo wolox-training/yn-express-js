@@ -23,5 +23,5 @@ exports.getAlbumsPhotos = (req, res, next) => {
 exports.buyAlbums = (req, res, next) =>
   servicesAlbums
     .buyAlbums(req)
-    .then(albums => res.send({ albums }))
+    .then(albums => res.status(201).send(albums))
     .catch(next);
