@@ -28,3 +28,29 @@ describe('album purchase', () => {
       });
   });
 });
+
+describe('user Albums List', () => {
+  it('should list the albums purchased by userId', done => {
+    factoryCreate({
+      name: 'yesica',
+      lastName: 'nava',
+      email: 'yesica@wolox.co',
+      password: 'shdfgs345',
+      administrator: true
+    })
+      .then(() => {
+        const token =
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
+          'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+        return request(app)
+          .post('/users/6/albums')
+          .set({ Accept: 'application/json', Authorization: token });
+      })
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(response.text).toBe("the album 'Prueba de albums' was purchased correctly");
+        dictum.chai(response, 'should list the albums purchased by userId');
+        done();
+      });
+  });
+});
