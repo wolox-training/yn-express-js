@@ -55,7 +55,7 @@ describe('album purchase', () => {
           .set({ Accept: 'application/json', Authorization: token })
       )
       .then(response => {
-        expect(response.statusCode).toBe(401);
+        expect(response.statusCode).toBe(400);
         expect(response.body.message.message).toBe('you cannot buy this album again');
         done();
       });
