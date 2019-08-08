@@ -41,6 +41,13 @@ const albumPurchased = (albumId, userId) =>
       throw error.databaseError(err.message);
     });
 
+exports.getAlbumsListByIdUser = userId =>
+  Album.findAll({ where: { userId } })
+    .then(result => result)
+    .catch(err => {
+      throw error.databaseError(err.message);
+    });
+
 const getUser = email =>
   User.findOne({
     where: { email },
@@ -79,3 +86,4 @@ exports.buyAlbums = async req => {
 };
 
 exports.getAlbum = getAlbum;
+exports.getUser = getUser;

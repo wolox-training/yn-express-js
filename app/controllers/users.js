@@ -34,3 +34,9 @@ exports.signUpAdministrator = (req, res, next) => {
     .then(() => res.status(201).send('the administrator user was created correctly'))
     .catch(next);
 };
+
+exports.userAlbumsList = (req, res, next) =>
+  servicesUser
+    .userAlbumsList(req)
+    .then(result => res.status(200).send(result))
+    .catch(next);

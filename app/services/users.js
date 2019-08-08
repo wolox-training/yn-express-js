@@ -4,7 +4,8 @@ const { User } = require('../models'),
   bcrypt = require('bcryptjs'),
   jwt = require('jwt-simple'),
   configDevelopment = require('../../config'),
-  { secret } = configDevelopment.common.jwt;
+  { secret } = configDevelopment.common.jwt,
+  servicesAlbums = require('../services/albums');
 
 const upsert = userData =>
   User.upsert(userData, { where: { email: userData.email } })
@@ -79,4 +80,19 @@ exports.userList = ({ page = 0, pageSize = 5 }) => {
 exports.createUserAdmin = userData => {
   userData.administrator = true;
   return upsert(userData);
+};
+
+exports.userAlbumsList = async req => {
+  try {
+    if (req.body.decode.administrator !== true) {
+      const user = await servicesAlbums.getUser(req.body.decode.email);
+      if (Number(user.id) !== Number(req.params.user_id)) {
+        throw error.userAlbumsListError('you can only see your albums');
+      }
+    }
+    const getAlbumsList = await servicesAlbums.getAlbumsListByIdUser(req.params.user_id);
+    return getAlbumsList;
+  } catch (err) {
+    throw error.userAlbumsListError(err);
+  }
 };

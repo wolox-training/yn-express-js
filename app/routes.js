@@ -1,6 +1,6 @@
 const { healthCheck } = require('./controllers/healthCheck'),
   { getAlbums, getAlbumsPhotos, buyAlbums } = require('./controllers/albums'),
-  { signUp, signIn, userList, signUpAdministrator } = require('./controllers/users'),
+  { signUp, signIn, userList, signUpAdministrator, userAlbumsList } = require('./controllers/users'),
   {
     signUpMiddleware,
     signInMiddleware,
@@ -13,6 +13,7 @@ exports.init = app => {
   app.get('/albums/:id?', getAlbums);
   app.get('/albums/:id/photos', getAlbumsPhotos);
   app.get('/users', validateTokenMiddleware, userList);
+  app.get('/users/:user_id/albums', [validateTokenMiddleware], userAlbumsList);
   app.post('/users', signUpMiddleware, signUp);
   app.post('/users/sessions', signInMiddleware, signIn);
   app.post(
