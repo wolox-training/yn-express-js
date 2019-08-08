@@ -57,17 +57,13 @@ exports.buyAlbums = async req => {
       source = `${urlApi}/albums/${albumId}`,
       user = await getUser(req.body.decode.email),
       albums = await getAlbum(source);
-
     if (!albums) {
       throw errors.buyAlbumsError('Album does not exist');
     }
-
     const purchasedAlbum = await albumPurchased(albumId, user.id);
-
     if (purchasedAlbum !== false) {
       throw errors.buyAlbumsError('you cannot buy this album again');
     }
-
     return createAlbums({
       albumId: albums.id,
       userId: user.id,
