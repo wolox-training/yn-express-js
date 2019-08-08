@@ -28,7 +28,7 @@ describe('album purchase', () => {
       });
   });
 
-  it('should allow buy an album', done => {
+  it('should not allow buy an album', done => {
     factoryCreate({
       name: 'yesica',
       lastName: 'nava',
