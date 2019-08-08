@@ -3,12 +3,6 @@ const request = require('supertest'),
   { factoryCreate } = require('../test/utils.test'),
   dictum = require('dictum.js');
 
-// jest.mock('../app/services/albums/getAlbum', () => () => ({
-//   userId: 1,
-//   id: 1,
-//   title: 'yesica nava'
-// }));
-
 describe('album purchase', () => {
   it('should allow buy an album', done => {
     factoryCreate({
@@ -28,7 +22,7 @@ describe('album purchase', () => {
       })
       .then(response => {
         expect(response.statusCode).toBe(201);
-        expect(response.text).toBe("the album 'quidem molestiae enim' was purchased correctly");
+        expect(response.text).toBe("the album 'Prueba de albums' was purchased correctly");
         dictum.chai(response, 'should register with all the fields correctly');
         done();
       });
