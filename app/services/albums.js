@@ -4,12 +4,12 @@ const request = require('request-promise'),
   config = require('../../config'),
   error = require('../errors'),
   urlApi = config.common.apiAlbums.url,
-  { User } = require('../models'),
-  { Album } = require('../models');
+  { Album } = require('../models'),
+  servicesUser = require('../services/users');
 
-const createAlbums = userData =>
-  Album.create(userData)
-    .then(() => `the album '${userData.name}' was purchased correctly`)
+const createAlbums = albumData =>
+  Album.create(albumData)
+    .then(() => `the album '${albumData.name}' was purchased correctly`)
     .catch(err => {
       throw error.databaseError(err.message);
     });
@@ -30,13 +30,7 @@ const albumPurchased = (albumId, userId) =>
     where: { albumId, userId },
     attributes: ['id']
   })
-    .then(result => {
-      let exist = false;
-      if (result.count !== 0) {
-        exist = true;
-      }
-      return exist;
-    })
+    .then(result => result.count !== 0)
     .catch(err => {
       throw error.databaseError(err.message);
     });
@@ -48,21 +42,13 @@ exports.getAlbumsListByIdUser = userId =>
       throw error.databaseError(err.message);
     });
 
-const getUser = email =>
-  User.findOne({
-    where: { email },
-    attributes: ['id']
-  }).catch(err => {
-    throw error.databaseError(err.message);
-  });
-
 exports.getAlbums = url => getAlbum(url);
 
 exports.buyAlbums = async req => {
   try {
     const albumId = req.params.id,
       source = `${urlApi}/albums/${albumId}`,
-      user = await getUser(req.body.decode.email),
+      user = await servicesUser.getUser(req.body.decode.email),
       albums = await getAlbum(source);
     if (!albums) {
       throw errors.buyAlbumsError('Album does not exist');
@@ -81,6 +67,4 @@ exports.buyAlbums = async req => {
   }
 };
 
-exports.getAlbum = getAlbum;
-exports.getUser = getUser;
 exports.albumPurchased = albumPurchased;
