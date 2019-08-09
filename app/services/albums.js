@@ -14,11 +14,12 @@ const createAlbums = albumData =>
       throw error.databaseError(err.message);
     });
 
-const getAlbum = url => {
+exports.getAlbumSources = url => {
   const options = {
     uri: url,
     json: true
   };
+
   return request(options).catch(err => {
     logger.error(err);
     throw errors.albumsApiError(err.message);
@@ -35,14 +36,12 @@ const albumPurchased = (albumId, userId) =>
       throw error.databaseError(err.message);
     });
 
-exports.getAlbums = url => getAlbum(url);
-
 exports.buyAlbums = async req => {
   try {
     const albumId = req.params.id,
       source = `${urlApi}/albums/${albumId}`,
       user = await servicesUser.getUser(req.body.decode.email),
-      albums = await getAlbum(source);
+      albums = await exports.getAlbumSources(source);
     if (!albums) {
       throw errors.buyAlbumsError('Album does not exist');
     }
