@@ -18,7 +18,7 @@ const upsert = userData =>
       throw error.databaseError(err.message);
     });
 
-exports.getUser = email =>
+const getUser = email =>
   User.findOne({
     where: { email },
     attributes: ['id']
@@ -93,7 +93,7 @@ exports.createUserAdmin = userData => {
 exports.userAlbumsList = async req => {
   try {
     if (req.body.decode.administrator !== true) {
-      const user = await servicesAlbums.getUser(req.body.decode.email);
+      const user = await getUser(req.body.decode.email);
       if (Number(user.id) !== Number(req.params.user_id)) {
         throw error.userAlbumsListError('you can only see your albums');
       }
@@ -104,3 +104,5 @@ exports.userAlbumsList = async req => {
     throw error.userAlbumsListError(err);
   }
 };
+
+exports.getUser = getUser;
