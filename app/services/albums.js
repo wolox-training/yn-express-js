@@ -83,3 +83,4 @@ exports.buyAlbums = async req => {
 
 exports.getAlbum = getAlbum;
 exports.getUser = getUser;
+exports.albumPurchased = albumPurchased;

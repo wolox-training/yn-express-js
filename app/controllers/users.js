@@ -40,3 +40,9 @@ exports.userAlbumsList = (req, res, next) =>
     .userAlbumsList(req)
     .then(result => res.status(200).send(result))
     .catch(next);
+
+exports.userAlbumPhotosList = (req, res, next) =>
+  servicesUser
+    .userAlbumPhotosList(req)
+    .then(result => res.status(200).send(result))
+    .catch(next);
