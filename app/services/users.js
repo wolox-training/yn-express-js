@@ -17,6 +17,14 @@ const upsert = userData =>
       throw error.databaseError(err.message);
     });
 
+exports.getUser = email =>
+  User.findOne({
+    where: { email },
+    attributes: ['id']
+  }).catch(err => {
+    throw error.databaseError(err.message);
+  });
+
 exports.validateToken = ({ email }) =>
   User.findAndCountAll({ where: { email } })
     .then(result => {
