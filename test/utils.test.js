@@ -13,7 +13,7 @@ factory.define(
     name: factory.chance('name'),
     lastName: factory.chance('last'),
     email: factory.chance('email', { domain: 'wolox.co' }),
-    password: factory.chance('name'),
+    password: factory.chance('alphaNumeric'),
     administrator: factory.chance('bool')
   },
   {

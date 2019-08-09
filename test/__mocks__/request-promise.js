@@ -1,4 +1,4 @@
-const logger = require('../../logger');
+const logger = require('../../app/logger');
 
 const album = {
   userId: 1,
