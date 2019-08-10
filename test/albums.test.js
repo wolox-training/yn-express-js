@@ -80,10 +80,9 @@ describe('user Albums List', () => {
           .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
           .set('Accept', 'application/json')
           .then(response => {
-            const tokenResponse = JSON.parse(response.text);
             request(app)
               .get('/users/1/albums')
-              .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+              .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
                 expect(result.statusCode).toBe(200);
                 expect(response.text).toString(responseAlbumsList);
@@ -110,10 +109,9 @@ describe('user Albums List', () => {
           .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
           .set('Accept', 'application/json')
           .then(response => {
-            const tokenResponse = JSON.parse(response.text);
             request(app)
               .get('/users/3/albums')
-              .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+              .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
                 expect(result.statusCode).toBe(401);
                 done();

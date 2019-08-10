@@ -6,7 +6,7 @@ exports.getAlbums = (req, res, next) => {
   const idAlbum = req.params.id;
   const source = idAlbum ? `${url}/albums/${idAlbum}` : `${url}/albums`;
   return servicesAlbums
-    .getAlbums(source)
+    .getAlbumSources(source)
     .then(albums => res.send({ albums }))
     .catch(next);
 };
