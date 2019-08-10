@@ -55,6 +55,6 @@ exports.buyAlbums = async req => {
       name: albums.title
     });
   } catch (err) {
-    throw error.buyAlbumsError(err);
+    throw err;
   }
 };
