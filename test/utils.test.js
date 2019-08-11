@@ -6,6 +6,10 @@ const { factory } = require('factory-girl'),
   { saltNumber } = config.common.bcrypt,
   salt = bcrypt.genSaltSync(Number(saltNumber));
 
+exports.token =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
+  'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+
 factory.define(
   'User',
   User,

@@ -1,11 +1,7 @@
 const request = require('supertest'),
   app = require('../app'),
-  { factoryCreate, factoryCreateAlbums } = require('../test/utils.test'),
+  { factoryCreate, factoryCreateAlbums, token } = require('../test/utils.test'),
   dictum = require('dictum.js');
-
-const token =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
-  'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
 
 const responseAlbumsList = [
   {
@@ -56,7 +52,7 @@ describe('album purchase', () => {
       )
       .then(response => {
         expect(response.statusCode).toBe(400);
-        expect(response.body.message.message).toBe('you cannot buy this album again');
+        expect(response.body.message).toBe('you cannot buy this album again');
         done();
       });
   });
@@ -113,7 +109,7 @@ describe('user Albums List', () => {
               .get('/users/3/albums')
               .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
-                expect(result.statusCode).toBe(401);
+                expect(result.statusCode).toBe(400);
                 done();
               });
           })

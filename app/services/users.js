@@ -94,14 +94,13 @@ exports.userAlbumsList = async req => {
   try {
     if (req.body.decode.administrator !== true) {
       const user = await getUser(req.body.decode.email);
-      if (Number(user.id) !== Number(req.params.user_id)) {
+      if (parseInt(user.id) !== parseInt(req.params.user_id)) {
         throw error.userAlbumsListError('you can only see your albums');
       }
     }
-    const getAlbumsList = await servicesAlbums.getAlbumsListByIdUser(req.params.user_id);
-    return getAlbumsList;
+    return await servicesAlbums.getAlbumsListByIdUser(req.params.user_id);
   } catch (err) {
-    throw error.userAlbumsListError(err);
+    throw err;
   }
 };
 
