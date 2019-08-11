@@ -1,11 +1,7 @@
 const request = require('supertest'),
   app = require('../app'),
-  { factoryCreate, factoryCreateAlbums } = require('../test/utils.test'),
+  { factoryCreate, factoryCreateAlbums, token } = require('../test/utils.test'),
   dictum = require('dictum.js');
-
-const token =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
-  'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
 
 const responseAlbumsList = [
   {
@@ -64,7 +60,7 @@ describe('album purchase', () => {
       )
       .then(response => {
         expect(response.statusCode).toBe(400);
-        expect(response.body.message.message).toBe('you cannot buy this album again');
+        expect(response.body.message).toBe('you cannot buy this album again');
         done();
       });
   });
@@ -88,10 +84,9 @@ describe('user Albums List', () => {
           .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
           .set('Accept', 'application/json')
           .then(response => {
-            const tokenResponse = JSON.parse(response.text);
             request(app)
               .get('/users/1/albums')
-              .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+              .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
                 expect(result.statusCode).toBe(200);
                 expect(response.text).toString(responseAlbumsList);
@@ -118,12 +113,11 @@ describe('user Albums List', () => {
           .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
           .set('Accept', 'application/json')
           .then(response => {
-            const tokenResponse = JSON.parse(response.text);
             request(app)
               .get('/users/3/albums')
-              .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+              .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
-                expect(result.statusCode).toBe(401);
+                expect(result.statusCode).toBe(400);
                 done();
               });
           })
@@ -149,10 +143,9 @@ describe('list of user albums photos', () => {
           .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
           .set('Accept', 'application/json')
           .then(response => {
-            const tokenResponse = JSON.parse(response.text);
             request(app)
               .get('/users/albums/1/photos')
-              .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+              .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
                 expect(result.statusCode).toBe(200);
                 expect(response.text).toString(albumPhotos);
@@ -179,12 +172,11 @@ describe('list of user albums photos', () => {
           .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
           .set('Accept', 'application/json')
           .then(response => {
-            const tokenResponse = JSON.parse(response.text);
             request(app)
               .get('/users/albums/8/photos')
-              .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+              .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
-                expect(result.statusCode).toBe(401);
+                expect(result.statusCode).toBe(400);
                 expect(result.body.message).toBe("you can't see the photos from this album");
                 done();
               });
@@ -209,12 +201,11 @@ describe('list of user albums photos', () => {
           .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
           .set('Accept', 'application/json')
           .then(response => {
-            const tokenResponse = JSON.parse(response.text);
             request(app)
               .get('/users/albums/9/photos')
-              .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+              .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
-                expect(result.statusCode).toBe(401);
+                expect(result.statusCode).toBe(400);
                 expect(result.body.message).toBe("you can't see the photos from this album");
                 done();
               });

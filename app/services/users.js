@@ -20,7 +20,7 @@ const upsert = userData =>
       throw error.databaseError(err.message);
     });
 
-const getUser = email =>
+exports.getUser = email =>
   User.findOne({
     where: { email },
     attributes: ['id']
@@ -95,28 +95,28 @@ exports.createUserAdmin = userData => {
 exports.userAlbumsList = async req => {
   try {
     if (req.body.decode.administrator !== true) {
-      const user = await getUser(req.body.decode.email);
-      if (Number(user.id) !== Number(req.params.user_id)) {
+      const user = await exports.getUser(req.body.decode.email);
+      if (parseInt(user.id) !== parseInt(req.params.user_id)) {
         throw error.userAlbumsListError('you can only see your albums');
       }
     }
-    const getAlbumsList = await servicesAlbums.getAlbumsListByIdUser(req.params.user_id);
-    return getAlbumsList;
+    return await servicesAlbums.getAlbumsListByIdUser(req.params.user_id);
   } catch (err) {
-    throw error.userAlbumsListError(err);
+    throw err;
   }
 };
 
 exports.userAlbumPhotosList = async req => {
-  const albumId = req.params.id;
-  const user = await getUser(req.body.decode.email);
-  const purchasedAlbum = await servicesAlbums.albumPurchased(albumId, user.id);
-  if (purchasedAlbum !== true) {
-    throw error.userAlbumPhotosListError("you can't see the photos from this album");
+  try {
+    const albumId = req.params.id;
+    const user = await exports.getUser(req.body.decode.email);
+    const purchasedAlbum = await servicesAlbums.albumPurchased(albumId, user.id);
+    if (purchasedAlbum !== true) {
+      throw error.userAlbumPhotosListError("you can't see the photos from this album");
+    }
+    const source = `${url}/photos?albumId=${albumId}`;
+    return await servicesAlbums.getAlbumSources(source);
+  } catch (err) {
+    throw err;
   }
-  const source = `${url}/photos?albumId=${albumId}`;
-  const albums = await servicesAlbums.getAlbums(source);
-  return albums;
 };
-
-exports.getUser = getUser;

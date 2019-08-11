@@ -14,18 +14,19 @@ const createAlbums = albumData =>
       throw error.databaseError(err.message);
     });
 
-const getAlbum = url => {
+exports.getAlbumSources = url => {
   const options = {
     uri: url,
     json: true
   };
+
   return request(options).catch(err => {
     logger.error(err);
     throw errors.albumsApiError(err.message);
   });
 };
 
-const albumPurchased = (albumId, userId) =>
+exports.albumPurchased = (albumId, userId) =>
   Album.findAndCountAll({
     where: { albumId, userId },
     attributes: ['id']
@@ -36,24 +37,20 @@ const albumPurchased = (albumId, userId) =>
     });
 
 exports.getAlbumsListByIdUser = userId =>
-  Album.findAll({ where: { userId } })
-    .then(result => result)
-    .catch(err => {
-      throw error.databaseError(err.message);
-    });
-
-exports.getAlbums = url => getAlbum(url);
+  Album.findAll({ where: { userId } }).catch(err => {
+    throw error.databaseError(err.message);
+  });
 
 exports.buyAlbums = async req => {
   try {
     const albumId = req.params.id,
       source = `${urlApi}/albums/${albumId}`,
       user = await servicesUser.getUser(req.body.decode.email),
-      albums = await getAlbum(source);
+      albums = await exports.getAlbumSources(source);
     if (!albums) {
       throw errors.buyAlbumsError('Album does not exist');
     }
-    const purchasedAlbum = await albumPurchased(albumId, user.id);
+    const purchasedAlbum = await exports.albumPurchased(albumId, user.id);
     if (purchasedAlbum !== false) {
       throw errors.buyAlbumsError('you cannot buy this album again');
     }
@@ -63,8 +60,6 @@ exports.buyAlbums = async req => {
       name: albums.title
     });
   } catch (err) {
-    throw error.buyAlbumsError(err);
+    throw err;
   }
 };
-
-exports.albumPurchased = albumPurchased;
