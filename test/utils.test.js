@@ -30,9 +30,7 @@ factory.define(
 factory.define('Album', Album, {
   albumId: 1,
   name: factory.chance('name'),
-  userId: 1,
-  created_at: '2019-08-12T14:55:55.503Z',
-  deleted_at: null
+  userId: 1
 });
 
 exports.factoryCreate = data => factory.create('User', data);

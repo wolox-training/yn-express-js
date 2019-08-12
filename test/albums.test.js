@@ -8,9 +8,7 @@ const responseAlbumsList = [
     id: 1,
     albumId: 1,
     name: 'eaque aut omnis a',
-    userId: 1,
-    created_at: '2019-08-12T14:55:55.503Z',
-    deleted_at: null
+    userId: 1
   }
 ];
 
@@ -61,7 +59,7 @@ describe('album purchase', () => {
 });
 
 describe('user Albums List', () => {
-  it('should user Albums List', done => {
+  it.only('should user Albums List', done => {
     factoryCreate({
       name: 'yesica',
       lastName: 'nava',
@@ -82,7 +80,9 @@ describe('user Albums List', () => {
               .get('/users/1/albums')
               .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
-                responseAlbumsList[0].updated_at = result.body[0].updated_at;
+                delete result.body[0].updated_at;
+                delete result.body[0].deleted_at;
+                delete result.body[0].created_at;
                 expect(result.statusCode).toBe(200);
                 expect(result.body).toEqual(responseAlbumsList);
                 done();
