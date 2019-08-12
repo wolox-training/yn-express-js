@@ -21,6 +21,9 @@ exports.signInError = message => internalError(message, exports.SIGN_IN_ERROR);
 exports.VALIDATE_USER_ERROR = 'validate_user_error';
 exports.validateUserError = message => internalError(message, exports.VALIDATE_USER_ERROR);
 
+exports.BUY_ALBUMS_ERROR = 'buy_albums_error';
+exports.buyAlbumsError = message => internalError(message, exports.BUY_ALBUMS_ERROR);
+
 exports.VALIDATE_TOKEN_ERROR = 'validate_token_error';
 exports.validateTokenError = message => internalError(message, exports.VALIDATE_TOKEN_ERROR);
 

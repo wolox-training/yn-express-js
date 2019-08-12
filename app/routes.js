@@ -1,5 +1,5 @@
 const { healthCheck } = require('./controllers/healthCheck'),
-  { getAlbums, getAlbumsPhotos } = require('./controllers/albums'),
+  { getAlbums, getAlbumsPhotos, buyAlbums } = require('./controllers/albums'),
   { signUp, signIn, userList, signUpAdministrator } = require('./controllers/users'),
   {
     signUpMiddleware,
@@ -20,4 +20,5 @@ exports.init = app => {
     [signUpMiddleware, validateTokenMiddleware, isAdministratorMiddleware],
     signUpAdministrator
   );
+  app.post('/albums/:id', [validateTokenMiddleware], buyAlbums);
 };

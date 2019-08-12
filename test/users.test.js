@@ -228,7 +228,6 @@ describe('administrator user registrar with the correct fields', () => {
         })
     );
   });
-
   it('you must not register administrator without permissions', done => {
     factoryCreate({
       name: 'sofia',
