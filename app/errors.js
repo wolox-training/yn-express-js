@@ -24,6 +24,9 @@ exports.validateUserError = message => internalError(message, exports.VALIDATE_U
 exports.BUY_ALBUMS_ERROR = 'buy_albums_error';
 exports.buyAlbumsError = message => internalError(message, exports.BUY_ALBUMS_ERROR);
 
+exports.USER_ALBUMS_LIST_ERROR = 'user_albums_list_error';
+exports.userAlbumsListError = message => internalError(message, exports.USER_ALBUMS_LIST_ERROR);
+
 exports.VALIDATE_TOKEN_ERROR = 'validate_token_error';
 exports.validateTokenError = message => internalError(message, exports.VALIDATE_TOKEN_ERROR);
 

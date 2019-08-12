@@ -36,6 +36,11 @@ const albumPurchased = (albumId, userId) =>
       throw error.databaseError(err.message);
     });
 
+exports.getAlbumsListByIdUser = userId =>
+  Album.findAll({ where: { userId } }).catch(err => {
+    throw error.databaseError(err.message);
+  });
+
 exports.buyAlbums = async req => {
   try {
     const albumId = req.params.id,

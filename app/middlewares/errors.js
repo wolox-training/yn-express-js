@@ -12,7 +12,8 @@ const statusCodes = {
   [errors.DEFAULT_ERROR]: 500,
   [errors.VALIDATE_TOKEN_ERROR]: 401,
   [errors.CREATE_ADMIN_ERROR]: 400,
-  [errors.BUY_ALBUMS_ERROR]: 400
+  [errors.BUY_ALBUMS_ERROR]: 400,
+  [errors.USER_ALBUMS_LIST_ERROR]: 400
 };
 
 exports.handle = (error, req, res, next) => {
