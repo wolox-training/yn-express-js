@@ -12,7 +12,8 @@ const { healthCheck } = require('./controllers/healthCheck'),
     signUpMiddleware,
     signInMiddleware,
     validateTokenMiddleware,
-    isAdministratorMiddleware
+    isAdministratorMiddleware,
+    disableAllSessions
   } = require('./middlewares/users');
 
 exports.init = app => {
@@ -30,4 +31,5 @@ exports.init = app => {
     signUpAdministrator
   );
   app.post('/albums/:id', [validateTokenMiddleware], buyAlbums);
+  app.post('/users/sessions/invalidate_all', disableAllSessions);
 };

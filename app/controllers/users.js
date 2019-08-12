@@ -46,3 +46,9 @@ exports.userAlbumPhotosList = (req, res, next) =>
     .userAlbumPhotosList(req)
     .then(result => res.status(200).send(result))
     .catch(next);
+
+exports.disableAllSessions = (req, res, next) =>
+  servicesUser
+    .disableAllSessions(req)
+    .then(result => res.status(200).send(result))
+    .catch(next);

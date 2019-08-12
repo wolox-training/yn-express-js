@@ -120,3 +120,6 @@ exports.userAlbumPhotosList = async req => {
     throw err;
   }
 };
+
+// exports.disableAllSessions = req => {
+// };
