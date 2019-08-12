@@ -96,7 +96,7 @@ exports.userAlbumsList = async req => {
   try {
     if (req.body.decode.administrator !== true) {
       const user = await exports.getUser(req.body.decode.email);
-      if (parseInt(user.id) !== parseInt(req.params.user_id)) {
+      if (user.id !== parseInt(req.params.user_id)) {
         throw error.userAlbumsListError('you can only see your albums');
       }
     }
