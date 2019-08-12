@@ -59,7 +59,7 @@ describe('album purchase', () => {
 });
 
 describe('user Albums List', () => {
-  it.only('should user Albums List', done => {
+  it('should user Albums List', done => {
     factoryCreate({
       name: 'yesica',
       lastName: 'nava',
