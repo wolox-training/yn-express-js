@@ -1,7 +1,7 @@
 const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js'),
-  { factoryCreate } = require('../test/utils.test');
+  { factoryCreate, token } = require('../test/utils.test');
 
 const resultUserList = [
   {
@@ -16,10 +16,10 @@ const resultUserList = [
   }
 ];
 
-const testCreate = (email, password) =>
+const testCreate = (email, password, dateToken) =>
   request(app)
     .post('/users')
-    .send({ name: 'yesica', lastName: 'nava', email, password })
+    .send({ name: 'yesica', lastName: 'nava', email, password, dateToken })
     .set('Accept', 'application/json');
 
 describe('User registration test, with their respective fields', () => {
@@ -107,11 +107,6 @@ describe('User sign in test, with their respective fields', () => {
         .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
         .set('Accept', 'application/json')
         .then(response => {
-          const token = {
-            token:
-              'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
-              'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8'
-          };
           expect(response.statusCode).toBe(200);
           expect(response.text).toString(token);
           dictum.chai(response, 'should sign in with all the fields correctly');
@@ -140,10 +135,7 @@ describe('User sign in test, with their respective fields', () => {
 
 describe('user list test', () => {
   it('should get the user list', done => {
-    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
-      const token =
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
-        'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+    testCreate('yesica@wolox.co', 'shdfgs345', '1565721770').then(() => {
       request(app)
         .get('/users?page=1&pageSize=5')
         .set({ Accept: 'application/json', Authorization: token })
@@ -157,10 +149,7 @@ describe('user list test', () => {
   });
 
   it('should get the list of users with the parameter = page', done => {
-    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
-      const token =
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
-        'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+    testCreate('yesica@wolox.co', 'shdfgs345', '1565721770').then(() => {
       request(app)
         .get('/users?page=1')
         .set({ Accept: 'application/json', Authorization: token })
@@ -173,10 +162,7 @@ describe('user list test', () => {
   });
 
   it('should get the list of users with the parameter = page and pageSize', done => {
-    testCreate('yesica@wolox.co', 'shdfgs345').then(() => {
-      const token =
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
-        'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+    testCreate('yesica@wolox.co', 'shdfgs345', '1565721770').then(() => {
       request(app)
         .get('/users?page=1&?pageSize=7')
         .set({ Accept: 'application/json', Authorization: token })
@@ -251,6 +237,55 @@ describe('administrator user registrar with the correct fields', () => {
               expect(result.body.message).toBe('You do not have permissions to perform this operation');
               done();
             });
+        })
+    );
+  });
+});
+
+describe('disable all sessions', () => {
+  it('should disable all active sessions', done => {
+    factoryCreate({
+      name: 'sofia',
+      lastName: 'arismendy',
+      email: 'sofia@wolox.co',
+      password: 'yuli35624',
+      administrator: true
+    }).then(() =>
+      request(app)
+        .post('/users/sessions')
+        .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
+        .set('Accept', 'application/json')
+        .then(response => {
+          const tokenResponse = JSON.parse(response.text);
+          request(app)
+            .post('/users/sessions/invalidate_all')
+            .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+            .then(result => {
+              expect(result.statusCode).toBe(200);
+              expect(result.text).toBe('all sessions were properly disabled');
+              dictum.chai(result, 'should disable all active sessions');
+              done();
+            });
+        })
+    );
+  });
+
+  it('should not disable all active sessions', done => {
+    factoryCreate({
+      name: 'sofia',
+      lastName: 'arismendy',
+      email: 'sofia@wolox.co',
+      password: 'yuli35624',
+      administrator: true,
+      dateToken: null
+    }).then(() =>
+      request(app)
+        .post('/users/sessions/invalidate_all')
+        .set({ Accept: 'application/json', Authorization: token })
+        .then(result => {
+          expect(result.statusCode).toBe(503);
+          expect(result.body.message).toBe('invalid Token ');
+          done();
         })
     );
   });

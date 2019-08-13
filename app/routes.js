@@ -31,5 +31,5 @@ exports.init = app => {
     signUpAdministrator
   );
   app.post('/albums/:id', [validateTokenMiddleware], buyAlbums);
-  app.post('/users/sessions/invalidate_all', disableAllSessions);
+  app.post('/users/sessions/invalidate_all', validateTokenMiddleware, disableAllSessions);
 };

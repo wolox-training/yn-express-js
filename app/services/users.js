@@ -20,6 +20,12 @@ const upsert = userData =>
       throw error.databaseError(err.message);
     });
 
+const update = (dateToken, email) =>
+  User.update({ dateToken }, { where: { email } }).catch(err => {
+    logger.error(`Could not update user: ${name}`);
+    throw error.databaseError(err.message);
+  });
+
 exports.getUser = email =>
   User.findOne({
     where: { email },
@@ -28,8 +34,8 @@ exports.getUser = email =>
     throw error.databaseError(err.message);
   });
 
-exports.validateToken = ({ email }) =>
-  User.findAndCountAll({ where: { email } })
+exports.validateToken = ({ email, iat }) =>
+  User.findAndCountAll({ where: { email, dateToken: iat } })
     .then(result => {
       if (result.count !== 1) {
         throw error.validateTokenError('invalid Token ');
@@ -58,23 +64,22 @@ exports.signIn = async ({ email, password }) => {
   try {
     const result = await User.findOne({
       where: { email },
-      attributes: ['email', 'password', 'administrator']
+      attributes: ['email', 'password', 'administrator', 'dateToken']
     });
-
+    const dateToken = result.dateToken === null ? Math.floor(new Date() / 1000) : result.dateToken;
     const compare = await bcrypt.compare(password, result.password);
     if (compare !== true) {
       throw error.signInError('email or password incorrect');
     }
-    const date = Math.floor(new Date() / 1000);
+    if (result.dateToken === null) {
+      await update(dateToken, email);
+    }
     const bodyToken = {
       email,
       administrator: result.administrator,
-      iat: date
+      iat: dateToken
     };
     const token = jwt.encode(bodyToken, secret);
-    console.log(date);
-    console.log(token);
-
     return token;
   } catch (err) {
     throw err;
@@ -125,6 +130,8 @@ exports.userAlbumPhotosList = async req => {
   }
 };
 
-exports.disableAllSessions = req => {
-  console.log(req);
-};
+exports.disableAllSessions = req =>
+  update(null, req.body.decode.email).catch(err => {
+    logger.error(err);
+    throw error.disableAllSessionsError(err.message);
+  });

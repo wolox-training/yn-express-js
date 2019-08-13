@@ -27,7 +27,8 @@ describe('album purchase', () => {
       lastName: 'nava',
       email: 'yesica@wolox.co',
       password: 'shdfgs345',
-      administrator: true
+      administrator: true,
+      dateToken: 1565721770
     })
       .then(() =>
         request(app)
@@ -48,7 +49,8 @@ describe('album purchase', () => {
       lastName: 'nava',
       email: 'yesica@wolox.co',
       password: 'shdfgs345',
-      administrator: true
+      administrator: true,
+      dateToken: 1565721770
     })
       .then(() => {
         factoryCreateAlbums();
@@ -73,7 +75,8 @@ describe('user Albums List', () => {
       lastName: 'nava',
       email: 'yesica@wolox.co',
       password: 'shdfgs345',
-      administrator: true
+      administrator: true,
+      dateToken: 1565721770
     })
       .then(() => {
         factoryCreateAlbums({ name: 'eaque aut omnis a' });
@@ -105,7 +108,8 @@ describe('user Albums List', () => {
       lastName: 'nava',
       email: 'yesica@wolox.co',
       password: 'shdfgs345',
-      administrator: false
+      administrator: false,
+      dateToken: 1565721770
     })
       .then(() => {
         factoryCreateAlbums({ name: 'eaque aut omnis a' });
@@ -136,7 +140,8 @@ describe('list of user albums photos', () => {
       lastName: 'nava',
       email: 'yesica@wolox.co',
       password: 'shdfgs345',
-      administrator: true
+      administrator: true,
+      dateToken: 1565721770
     })
       .then(() => {
         factoryCreateAlbums();

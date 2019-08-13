@@ -7,8 +7,9 @@ const { factory } = require('factory-girl'),
   salt = bcrypt.genSaltSync(Number(saltNumber));
 
 exports.token =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
-  'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2' +
+  'ljYUB3b2xveC5jbyIsImFkbWluaXN0cmF0b3IiOmZhbHNlLCJpYXQiO' +
+  'jE1NjU3MjE3NzB9.jBqIUn1HEtH8III2yuKMo7GqKFY2pmG4vkVetXKkivQ';
 
 factory.define(
   'User',
@@ -18,7 +19,8 @@ factory.define(
     lastName: factory.chance('last'),
     email: factory.chance('email', { domain: 'wolox.co' }),
     password: factory.chance('alphaNumeric'),
-    administrator: factory.chance('bool')
+    administrator: factory.chance('bool'),
+    dateToken: Math.floor(new Date() / 1000)
   },
   {
     afterCreate: model => {
