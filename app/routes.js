@@ -6,14 +6,14 @@ const { healthCheck } = require('./controllers/healthCheck'),
     userList,
     signUpAdministrator,
     userAlbumsList,
-    userAlbumPhotosList
+    userAlbumPhotosList,
+    disableAllSessions
   } = require('./controllers/users'),
   {
     signUpMiddleware,
     signInMiddleware,
     validateTokenMiddleware,
-    isAdministratorMiddleware,
-    disableAllSessions
+    isAdministratorMiddleware
   } = require('./middlewares/users');
 
 exports.init = app => {

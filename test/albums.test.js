@@ -6,7 +6,7 @@ const request = require('supertest'),
 const responseAlbumsList = [
   {
     id: 1,
-    albumId: 9,
+    albumId: 1,
     name: 'eaque aut omnis a',
     userId: 1
   }
@@ -88,8 +88,11 @@ describe('user Albums List', () => {
               .get('/users/1/albums')
               .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
+                delete result.body[0].updated_at;
+                delete result.body[0].deleted_at;
+                delete result.body[0].created_at;
                 expect(result.statusCode).toBe(200);
-                expect(response.text).toString(responseAlbumsList);
+                expect(result.body).toEqual(responseAlbumsList);
                 done();
               });
           })
@@ -118,6 +121,7 @@ describe('user Albums List', () => {
               .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
                 expect(result.statusCode).toBe(400);
+                expect(result.body.message).toBe('you can only see your albums');
                 done();
               });
           })
@@ -148,7 +152,7 @@ describe('list of user albums photos', () => {
               .set({ Accept: 'application/json', Authorization: response.body.token })
               .then(result => {
                 expect(result.statusCode).toBe(200);
-                expect(response.text).toString(albumPhotos);
+                expect(result.body).toEqual(albumPhotos);
                 done();
               });
           })

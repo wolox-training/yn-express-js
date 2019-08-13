@@ -65,15 +65,19 @@ exports.signIn = async ({ email, password }) => {
     if (compare !== true) {
       throw error.signInError('email or password incorrect');
     }
-
+    const date = Math.floor(new Date() / 1000);
     const bodyToken = {
       email,
-      administrator: result.administrator
+      administrator: result.administrator,
+      iat: date
     };
     const token = jwt.encode(bodyToken, secret);
+    console.log(date);
+    console.log(token);
+
     return token;
   } catch (err) {
-    throw error.signInError(err);
+    throw err;
   }
 };
 
@@ -96,7 +100,7 @@ exports.userAlbumsList = async req => {
   try {
     if (req.body.decode.administrator !== true) {
       const user = await exports.getUser(req.body.decode.email);
-      if (parseInt(user.id) !== parseInt(req.params.user_id)) {
+      if (user.id !== parseInt(req.params.user_id)) {
         throw error.userAlbumsListError('you can only see your albums');
       }
     }
@@ -121,5 +125,6 @@ exports.userAlbumPhotosList = async req => {
   }
 };
 
-// exports.disableAllSessions = req => {
-// };
+exports.disableAllSessions = req => {
+  console.log(req);
+};
