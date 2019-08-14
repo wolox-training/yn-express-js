@@ -256,10 +256,9 @@ describe('disable all sessions', () => {
         .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
         .set('Accept', 'application/json')
         .then(response => {
-          const tokenResponse = JSON.parse(response.text);
           request(app)
             .post('/users/sessions/invalidate_all')
-            .set({ Accept: 'application/json', Authorization: tokenResponse.token })
+            .set({ Accept: 'application/json', Authorization: response.body.token })
             .then(result => {
               expect(result.statusCode).toBe(200);
               expect(result.text).toBe('all sessions were properly disabled');

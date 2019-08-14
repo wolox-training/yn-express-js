@@ -27,10 +27,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false
       },
       dateToken: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: true,
-        field: 'date_token',
-        defaultValue: Math.floor(new Date() / 1000)
+        field: 'date_token'
       }
     },
     {
