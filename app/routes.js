@@ -20,8 +20,8 @@ exports.init = app => {
   app.get('/albums/:id?', getAlbums);
   app.get('/albums/:id/photos', getAlbumsPhotos);
   app.get('/users', validateTokenMiddleware, userList);
-  app.get('/users/:user_id/albums', [validateTokenMiddleware], userAlbumsList);
-  app.get('/users/albums/:id/photos', [validateTokenMiddleware], userAlbumPhotosList);
+  app.get('/users/:user_id/albums', validateTokenMiddleware, userAlbumsList);
+  app.get('/users/albums/:id/photos', validateTokenMiddleware, userAlbumPhotosList);
   app.post('/users', signUpMiddleware, signUp);
   app.post('/users/sessions', signInMiddleware, signIn);
   app.post(
@@ -29,5 +29,5 @@ exports.init = app => {
     [signUpMiddleware, validateTokenMiddleware, isAdministratorMiddleware],
     signUpAdministrator
   );
-  app.post('/albums/:id', [validateTokenMiddleware], buyAlbums);
+  app.post('/albums/:id', validateTokenMiddleware, buyAlbums);
 };

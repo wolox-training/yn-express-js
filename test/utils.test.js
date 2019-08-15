@@ -10,6 +10,14 @@ exports.token =
   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2ljYUB3b2' +
   'xveC5jbyJ9.W94vf6ymuks9qEsz-dDciig304QtAa7FeUjlNqwXaI8';
 
+exports.albumPhotos = {
+  albumId: 1,
+  id: 1,
+  title: 'accusamus beatae ad facilis cum similique qui sunt',
+  url: 'https://via.placeholder.com/600/92c952',
+  thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+};
+
 factory.define(
   'User',
   User,
