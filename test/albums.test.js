@@ -1,6 +1,6 @@
 const request = require('supertest'),
   app = require('../app'),
-  { factoryCreate, factoryCreateAlbums, token } = require('../test/utils.test'),
+  { factoryCreate, factoryCreateAlbums, token, albumPhotos } = require('../test/utils.test'),
   dictum = require('dictum.js');
 
 const responseAlbumsList = [
@@ -11,14 +11,6 @@ const responseAlbumsList = [
     userId: 1
   }
 ];
-
-const albumPhotos = {
-  albumId: 1,
-  id: 1,
-  title: 'accusamus beatae ad facilis cum similique qui sunt',
-  url: 'https://via.placeholder.com/600/92c952',
-  thumbnailUrl: 'https://via.placeholder.com/150/92c952'
-};
 
 describe('album purchase', () => {
   it('should allow buy an album', done => {
@@ -164,7 +156,7 @@ describe('list of user albums photos', () => {
       );
   });
 
-  it('should not list the photos of the albums of a user', done => {
+  it('should not list the photos of the albums of another use', done => {
     factoryCreate({
       name: 'yesica',
       lastName: 'nava',

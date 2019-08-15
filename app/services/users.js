@@ -126,7 +126,7 @@ exports.userAlbumPhotosList = async req => {
     const albumId = req.params.id;
     const user = await exports.getUser(req.body.decode.email);
     const purchasedAlbum = await servicesAlbums.albumPurchased(albumId, user.id);
-    if (purchasedAlbum !== true) {
+    if (!purchasedAlbum) {
       throw error.userAlbumPhotosListError("you can't see the photos from this album");
     }
     const source = `${url}/photos?albumId=${albumId}`;

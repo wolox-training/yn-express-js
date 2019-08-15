@@ -1,17 +1,10 @@
-const logger = require('../../app/logger');
+const logger = require('../../app/logger'),
+  { albumPhotos } = require('../utils.test');
 
 const album = {
   userId: 1,
   id: 1,
   title: 'Prueba de albums'
-};
-
-const albumPhotos = {
-  albumId: 1,
-  id: 1,
-  title: 'accusamus beatae ad facilis cum similique qui sunt',
-  url: 'https://via.placeholder.com/600/92c952',
-  thumbnailUrl: 'https://via.placeholder.com/150/92c952'
 };
 
 module.exports = jest.fn(url => {
