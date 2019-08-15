@@ -19,6 +19,23 @@ exports.albumPhotos = {
   thumbnailUrl: 'https://via.placeholder.com/150/92c952'
 };
 
+exports.responseAlbumsList = [
+  {
+    id: 1,
+    albumId: 1,
+    name: 'eaque aut omnis a',
+    userId: 1
+  }
+];
+
+exports.albumPhotos = {
+  albumId: 1,
+  id: 1,
+  title: 'accusamus beatae ad facilis cum similique qui sunt',
+  url: 'https://via.placeholder.com/600/92c952',
+  thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+};
+
 factory.define(
   'User',
   User,
@@ -27,8 +44,7 @@ factory.define(
     lastName: factory.chance('last'),
     email: factory.chance('email', { domain: 'wolox.co' }),
     password: factory.chance('alphaNumeric'),
-    administrator: factory.chance('bool'),
-    dateToken: Math.floor(new Date() / 1000)
+    administrator: factory.chance('bool')
   },
   {
     afterCreate: model => {

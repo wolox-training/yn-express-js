@@ -22,7 +22,7 @@ const upsert = userData =>
 
 const update = (dateToken, email) =>
   User.update({ dateToken }, { where: { email } }).catch(err => {
-    logger.error(`Could not update user: ${err}`);
+    logger.error(`Could not update user: ${email}`);
     throw error.databaseError(err.message);
   });
 
@@ -43,11 +43,9 @@ exports.validateToken = ({ email, iat }) =>
       if (result.count !== 1) {
         throw error.validateTokenError('invalid Token ');
       }
-      if (result.count === 1) {
-        if (result.rows[0].dataValues.dateToken !== null) {
-          if (iat < result.rows[0].dataValues.dateToken) {
-            throw error.validateTokenError('invalid Token ');
-          }
+      if (result.rows[0].dataValues.dateToken !== null) {
+        if (iat < result.rows[0].dataValues.dateToken) {
+          throw error.validateTokenError('invalid Token ');
         }
       }
     })

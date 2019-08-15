@@ -16,10 +16,10 @@ const resultUserList = [
   }
 ];
 
-const testCreate = (email, password, dateToken) =>
+const testCreate = (email, password) =>
   request(app)
     .post('/users')
-    .send({ name: 'yesica', lastName: 'nava', email, password, dateToken })
+    .send({ name: 'yesica', lastName: 'nava', email, password })
     .set('Accept', 'application/json');
 
 describe('User registration test, with their respective fields', () => {
@@ -275,8 +275,7 @@ describe('disable all sessions', () => {
       lastName: 'arismendy',
       email: 'sofia@wolox.co',
       password: 'yuli35624',
-      administrator: true,
-      dateToken: null
+      administrator: true
     }).then(() =>
       request(app)
         .post('/users/sessions/invalidate_all')
