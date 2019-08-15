@@ -1,6 +1,6 @@
 const request = require('supertest'),
   app = require('../app'),
-  { factoryCreate, factoryCreateAlbums, token } = require('../test/utils.test'),
+  { factoryCreate, factoryCreateAlbums, token, albumPhotos } = require('../test/utils.test'),
   dictum = require('dictum.js');
 
 const responseAlbumsList = [
@@ -114,6 +114,95 @@ describe('user Albums List', () => {
               .then(result => {
                 expect(result.statusCode).toBe(400);
                 expect(result.body.message).toBe('you can only see your albums');
+                done();
+              });
+          })
+      );
+  });
+});
+
+describe('list of user albums photos', () => {
+  it('should list the photos of the albums of a user', done => {
+    factoryCreate({
+      name: 'yesica',
+      lastName: 'nava',
+      email: 'yesica@wolox.co',
+      password: 'shdfgs345',
+      administrator: true
+    })
+      .then(() => {
+        factoryCreateAlbums();
+      })
+      .then(() =>
+        request(app)
+          .post('/users/sessions')
+          .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+          .set('Accept', 'application/json')
+          .then(response => {
+            request(app)
+              .get('/users/albums/1/photos')
+              .set({ Accept: 'application/json', Authorization: response.body.token })
+              .then(result => {
+                expect(result.statusCode).toBe(200);
+                expect(result.body).toEqual(albumPhotos);
+                done();
+              });
+          })
+      );
+  });
+
+  it('should not list the photos of the albums of another use', done => {
+    factoryCreate({
+      name: 'yesica',
+      lastName: 'nava',
+      email: 'yesica@wolox.co',
+      password: 'shdfgs345',
+      administrator: false
+    })
+      .then(() => {
+        factoryCreateAlbums();
+      })
+      .then(() =>
+        request(app)
+          .post('/users/sessions')
+          .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+          .set('Accept', 'application/json')
+          .then(response => {
+            request(app)
+              .get('/users/albums/8/photos')
+              .set({ Accept: 'application/json', Authorization: response.body.token })
+              .then(result => {
+                expect(result.statusCode).toBe(400);
+                expect(result.body.message).toBe("you can't see the photos from this album");
+                done();
+              });
+          })
+      );
+  });
+
+  it('should not allow lists of photos from any albums of an administrator user', done => {
+    factoryCreate({
+      name: 'yesica',
+      lastName: 'nava',
+      email: 'yesica@wolox.co',
+      password: 'shdfgs345',
+      administrator: true
+    })
+      .then(() => {
+        factoryCreateAlbums();
+      })
+      .then(() =>
+        request(app)
+          .post('/users/sessions')
+          .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+          .set('Accept', 'application/json')
+          .then(response => {
+            request(app)
+              .get('/users/albums/9/photos')
+              .set({ Accept: 'application/json', Authorization: response.body.token })
+              .then(result => {
+                expect(result.statusCode).toBe(400);
+                expect(result.body.message).toBe("you can't see the photos from this album");
                 done();
               });
           })

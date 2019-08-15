@@ -5,7 +5,9 @@ const { User } = require('../models'),
   jwt = require('jwt-simple'),
   configDevelopment = require('../../config'),
   { secret } = configDevelopment.common.jwt,
-  servicesAlbums = require('../services/albums');
+  servicesAlbums = require('../services/albums'),
+  config = require('../../config'),
+  { url } = config.common.apiAlbums;
 
 const upsert = userData =>
   User.upsert(userData, { where: { email: userData.email } })
@@ -99,6 +101,21 @@ exports.userAlbumsList = async req => {
       }
     }
     return await servicesAlbums.getAlbumsListByIdUser(req.params.user_id);
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.userAlbumPhotosList = async req => {
+  try {
+    const albumId = req.params.id;
+    const user = await exports.getUser(req.body.decode.email);
+    const purchasedAlbum = await servicesAlbums.albumPurchased(albumId, user.id);
+    if (!purchasedAlbum) {
+      throw error.userAlbumPhotosListError("you can't see the photos from this album");
+    }
+    const source = `${url}/photos?albumId=${albumId}`;
+    return await servicesAlbums.getAlbumSources(source);
   } catch (err) {
     throw err;
   }

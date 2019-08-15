@@ -26,7 +26,7 @@ exports.getAlbumSources = url => {
   });
 };
 
-const albumPurchased = (albumId, userId) =>
+exports.albumPurchased = (albumId, userId) =>
   Album.findAndCountAll({
     where: { albumId, userId },
     attributes: ['id']
@@ -50,7 +50,7 @@ exports.buyAlbums = async req => {
     if (!albums) {
       throw errors.buyAlbumsError('Album does not exist');
     }
-    const purchasedAlbum = await albumPurchased(albumId, user.id);
+    const purchasedAlbum = await exports.albumPurchased(albumId, user.id);
     if (purchasedAlbum !== false) {
       throw errors.buyAlbumsError('you cannot buy this album again');
     }
