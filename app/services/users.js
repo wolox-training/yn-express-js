@@ -8,8 +8,30 @@ const { User } = require('../models'),
   servicesAlbums = require('../services/albums'),
   config = require('../../config'),
   { url } = config.common.apiAlbums,
-  { expiration } = config.common.tokens;
+  { expiration } = config.common.tokens,
+  nodemailer = require('nodemailer');
 
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  auth: {
+    user: 'dulceamorbeauty@gmail.com',
+    pass: '3116299415yesica'
+  }
+});
+
+const sendEmail = async () => {
+  console.log('llegue');
+  console.log(transporter);
+  const info = await transporter.sendMail({
+    from: '"Yesica nava" <yesicanava56@gmail.com>',
+    to: 'yesicanava56@gmail.com',
+    subject: 'Hello ✔',
+    text: 'Hello world?',
+    html: '<b>Hello world?</b>'
+  });
+  console.log(info);
+  return info;
+};
 const upsert = userData =>
   User.upsert(userData, { where: { email: userData.email } })
     .then(result => {
@@ -65,6 +87,11 @@ exports.createUser = userData =>
     .then(result => {
       logger.info(`the user was created correctly: ${userData.name}`);
       return result;
+    })
+    .then(() => sendEmail())
+    .then(info => {
+      console.log(info);
+      return info;
     })
     .catch(err => {
       if (err.name === 'SequelizeUniqueConstraintError') {
