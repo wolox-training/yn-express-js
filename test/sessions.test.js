@@ -1,9 +1,14 @@
 const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js'),
-  { factoryCreate, token } = require('../test/utils.test');
+  { factoryCreate } = require('../test/utils.test');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const token =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2' +
+  'ljYUB3b2xveC5jbyIsImFkbWluaXN0cmF0b3IiOmZhbHNlLCJpYXQiO' +
+  'jE1NjU3MjE3NzB9.jBqIUn1HEtH8III2yuKMo7GqKFY2pmG4vkVetXKkivQ';
 
 describe('disable all sessions', () => {
   it('should disable all active sessions', done => {
@@ -54,7 +59,7 @@ describe('disable all sessions', () => {
 });
 
 describe('sessions expires', () => {
-  it('should not start navigation because the token expired', done => {
+  it('should not login the token has expired', done => {
     factoryCreate({
       name: 'sofia',
       lastName: 'arismendy',
@@ -67,7 +72,7 @@ describe('sessions expires', () => {
         .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
         .set('Accept', 'application/json')
         .then(response => {
-          delay(3000).then(() => {
+          delay(2000).then(() => {
             request(app)
               .get('/users/albums/1/photos')
               .set({ Accept: 'application/json', Authorization: response.body.token })
