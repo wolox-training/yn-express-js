@@ -8,29 +8,36 @@ const { factory } = require('factory-girl'),
   request = require('supertest'),
   app = require('../app');
 
-exports.token =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Inllc2' +
-  'ljYUB3b2xveC5jbyIsImFkbWluaXN0cmF0b3IiOmZhbHNlLCJpYXQiO' +
-  'jE1NjU3MjE3NzB9.jBqIUn1HEtH8III2yuKMo7GqKFY2pmG4vkVetXKkivQ';
+exports.testCreate = (email, password) =>
+  request(app)
+    .post('/users')
+    .send({ name: 'yesica', lastName: 'nava', email, password })
+    .set('Accept', 'application/json');
 
-exports.resultUserList = [
+exports.albumPhotos = {
+  albumId: 1,
+  id: 1,
+  title: 'accusamus beatae ad facilis cum similique qui sunt',
+  url: 'https://via.placeholder.com/600/92c952',
+  thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+};
+
+exports.responseAlbumsList = [
   {
     id: 1,
-    name: 'yesica',
-    lastName: 'nava',
-    email: 'yesica@wolox.co',
-    password: '$2a$10$2I6Lrhhs6cd7PNl10qV6YueEU8yL.2D1E4Y8BUG6Pja5sswhindG6',
-    created_at: '2019-07-25T21:50:47.143Z',
-    updated_at: '2019-07-25T21:50:47.143Z',
-    deleted_at: null
+    albumId: 1,
+    name: 'eaque aut omnis a',
+    userId: 1
   }
 ];
 
-exports.testCreate = (email, password, dateToken) =>
-  request(app)
-    .post('/users')
-    .send({ name: 'yesica', lastName: 'nava', email, password, dateToken })
-    .set('Accept', 'application/json');
+exports.albumPhotos = {
+  albumId: 1,
+  id: 1,
+  title: 'accusamus beatae ad facilis cum similique qui sunt',
+  url: 'https://via.placeholder.com/600/92c952',
+  thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+};
 
 factory.define(
   'User',
