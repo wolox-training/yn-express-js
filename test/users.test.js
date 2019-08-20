@@ -1,7 +1,7 @@
 const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js'),
-  { factoryCreate, token, resultUserList, testCreate } = require('../test/utils.test');
+  { factoryCreate, token, resultUserList, testCreate } = require('../test/utils');
 
 describe('User registration test, with their respective fields', () => {
   it('should register with all the fields correctly', done => {

@@ -49,8 +49,8 @@ exports.validateToken = ({ email, iat }) =>
           throw error.validateTokenError('invalid Token ');
         }
       }
-      const seconds = Math.floor(Date.now() / 1000) - Math.floor(iat / 1000);
-      if (expiration < seconds) {
+      const calculateSeconds = Math.floor(Date.now() / 1000) - Math.floor(iat / 1000);
+      if (expiration < calculateSeconds) {
         throw error.validateTokenError('the token has expired');
       }
     })

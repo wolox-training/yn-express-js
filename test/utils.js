@@ -14,14 +14,6 @@ exports.testCreate = (email, password) =>
     .send({ name: 'yesica', lastName: 'nava', email, password })
     .set('Accept', 'application/json');
 
-exports.albumPhotos = {
-  albumId: 1,
-  id: 1,
-  title: 'accusamus beatae ad facilis cum similique qui sunt',
-  url: 'https://via.placeholder.com/600/92c952',
-  thumbnailUrl: 'https://via.placeholder.com/150/92c952'
-};
-
 exports.responseAlbumsList = [
   {
     id: 1,
