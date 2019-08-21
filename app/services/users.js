@@ -9,29 +9,8 @@ const { User } = require('../models'),
   config = require('../../config'),
   { url } = config.common.apiAlbums,
   { expiration } = config.common.tokens,
-  nodemailer = require('nodemailer');
+  { sendMail } = require('./mailer');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  auth: {
-    user: 'dulceamorbeauty@gmail.com',
-    pass: '3116299415yesica'
-  }
-});
-
-const sendEmail = async () => {
-  console.log('llegue');
-  console.log(transporter);
-  const info = await transporter.sendMail({
-    from: '"Yesica nava" <yesicanava56@gmail.com>',
-    to: 'yesicanava56@gmail.com',
-    subject: 'Hello ✔',
-    text: 'Hello world?',
-    html: '<b>Hello world?</b>'
-  });
-  console.log(info);
-  return info;
-};
 const upsert = userData =>
   User.upsert(userData, { where: { email: userData.email } })
     .then(result => {
@@ -71,8 +50,8 @@ exports.validateToken = ({ email, iat }) =>
           throw error.validateTokenError('invalid Token ');
         }
       }
-      const seconds = Math.floor(Date.now() / 1000) - Math.floor(iat / 1000);
-      if (expiration < seconds) {
+      const calculateSeconds = Math.floor(Date.now() / 1000) - Math.floor(iat / 1000);
+      if (expiration < calculateSeconds) {
         throw error.validateTokenError('the token has expired');
       }
     })
@@ -82,14 +61,14 @@ exports.validateToken = ({ email, iat }) =>
 
 exports.createUser = userData =>
   User.create(userData)
-    .then(result => {
+    .then(() => {
       logger.info(`the user was created correctly: ${userData.name}`);
-      return result;
-    })
-    .then(() => sendEmail())
-    .then(info => {
-      console.log(info);
-      return info;
+      return sendMail({
+        from: 'yesica.betancourt@wolox.co',
+        to: userData.email,
+        subject: `Welcome: ${userData.name}`,
+        html: config.common.mailer.templateMailer
+      });
     })
     .catch(err => {
       if (err.name === 'SequelizeUniqueConstraintError') {

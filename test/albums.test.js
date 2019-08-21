@@ -1,6 +1,6 @@
 const request = require('supertest'),
   app = require('../app'),
-  { factoryCreate, factoryCreateAlbums, albumPhotos, responseAlbumsList } = require('../test/utils.test'),
+  { factoryCreate, factoryCreateAlbums, albumPhotos, responseAlbumsList } = require('../test/utils'),
   dictum = require('dictum.js');
 
 describe('album purchase', () => {

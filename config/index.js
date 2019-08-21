@@ -47,6 +47,13 @@ const config = {
     },
     bcrypt: {
       saltNumber: process.env.BCRYPT_SALT
+    },
+    mailer: {
+      host: process.env.HOST_MAILER,
+      port: process.env.PORT_MAILER,
+      user: process.env.USER_MAILER,
+      password: process.env.PASSWORD_MAILER,
+      templateMailer: process.env.TEMPLATE_MAIL
     }
   }
 };

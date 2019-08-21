@@ -1,7 +1,7 @@
 const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js'),
-  { factoryCreate } = require('../test/utils.test');
+  { factoryCreate } = require('../test/utils');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
