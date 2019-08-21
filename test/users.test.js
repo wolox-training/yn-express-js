@@ -1,26 +1,7 @@
 const request = require('supertest'),
   app = require('../app'),
   dictum = require('dictum.js'),
-  { factoryCreate, token } = require('../test/utils.test');
-
-const resultUserList = [
-  {
-    id: 1,
-    name: 'yesica',
-    lastName: 'nava',
-    email: 'yesica@wolox.co',
-    password: '$2a$10$2I6Lrhhs6cd7PNl10qV6YueEU8yL.2D1E4Y8BUG6Pja5sswhindG6',
-    created_at: '2019-07-25T21:50:47.143Z',
-    updated_at: '2019-07-25T21:50:47.143Z',
-    deleted_at: null
-  }
-];
-
-const testCreate = (email, password) =>
-  request(app)
-    .post('/users')
-    .send({ name: 'yesica', lastName: 'nava', email, password })
-    .set('Accept', 'application/json');
+  { factoryCreate, token, resultUserList, testCreate } = require('../test/utils');
 
 describe('User registration test, with their respective fields', () => {
   it('should register with all the fields correctly', done => {
@@ -137,13 +118,19 @@ describe('user list test', () => {
   it('should get the user list', done => {
     testCreate('yesica@wolox.co', 'shdfgs345', '1565721770').then(() => {
       request(app)
-        .get('/users?page=1&pageSize=5')
-        .set({ Accept: 'application/json', Authorization: token })
+        .post('/users/sessions')
+        .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+        .set('Accept', 'application/json')
         .then(response => {
-          expect(response.statusCode).toBe(200);
-          expect(response.text).toString(resultUserList);
-          dictum.chai(response, 'should sign in with all the fields correctly');
-          done();
+          request(app)
+            .get('/users?page=1&pageSize=5')
+            .set({ Accept: 'application/json', Authorization: response.body.token })
+            .then(result => {
+              expect(result.statusCode).toBe(200);
+              expect(result.text).toString(resultUserList);
+              dictum.chai(result, 'should sign in with all the fields correctly');
+              done();
+            });
         });
     });
   });
@@ -151,12 +138,18 @@ describe('user list test', () => {
   it('should get the list of users with the parameter = page', done => {
     testCreate('yesica@wolox.co', 'shdfgs345', '1565721770').then(() => {
       request(app)
-        .get('/users?page=1')
-        .set({ Accept: 'application/json', Authorization: token })
+        .post('/users/sessions')
+        .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+        .set('Accept', 'application/json')
         .then(response => {
-          expect(response.statusCode).toBe(200);
-          expect(response.text).toString(resultUserList);
-          done();
+          request(app)
+            .get('/users?page=1')
+            .set({ Accept: 'application/json', Authorization: response.body.token })
+            .then(result => {
+              expect(result.statusCode).toBe(200);
+              expect(result.text).toString(resultUserList);
+              done();
+            });
         });
     });
   });
@@ -164,12 +157,18 @@ describe('user list test', () => {
   it('should get the list of users with the parameter = page and pageSize', done => {
     testCreate('yesica@wolox.co', 'shdfgs345', '1565721770').then(() => {
       request(app)
-        .get('/users?page=1&?pageSize=7')
-        .set({ Accept: 'application/json', Authorization: token })
+        .post('/users/sessions')
+        .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+        .set('Accept', 'application/json')
         .then(response => {
-          expect(response.statusCode).toBe(200);
-          expect(response.text).toString(resultUserList);
-          done();
+          request(app)
+            .get('/users?page=1&?pageSize=7')
+            .set({ Accept: 'application/json', Authorization: response.body.token })
+            .then(result => {
+              expect(result.statusCode).toBe(200);
+              expect(result.text).toString(resultUserList);
+              done();
+            });
         });
     });
   });
@@ -237,53 +236,6 @@ describe('administrator user registrar with the correct fields', () => {
               expect(result.body.message).toBe('You do not have permissions to perform this operation');
               done();
             });
-        })
-    );
-  });
-});
-
-describe('disable all sessions', () => {
-  it('should disable all active sessions', done => {
-    factoryCreate({
-      name: 'sofia',
-      lastName: 'arismendy',
-      email: 'sofia@wolox.co',
-      password: 'yuli35624',
-      administrator: true
-    }).then(() =>
-      request(app)
-        .post('/users/sessions')
-        .send({ email: 'sofia@wolox.co', password: 'yuli35624' })
-        .set('Accept', 'application/json')
-        .then(response => {
-          request(app)
-            .post('/users/sessions/invalidate_all')
-            .set({ Accept: 'application/json', Authorization: response.body.token })
-            .then(result => {
-              expect(result.statusCode).toBe(200);
-              expect(result.text).toBe('all sessions were properly disabled');
-              dictum.chai(result, 'should disable all active sessions');
-              done();
-            });
-        })
-    );
-  });
-
-  it('should not disable all active sessions', done => {
-    factoryCreate({
-      name: 'sofia',
-      lastName: 'arismendy',
-      email: 'sofia@wolox.co',
-      password: 'yuli35624',
-      administrator: true
-    }).then(() =>
-      request(app)
-        .post('/users/sessions/invalidate_all')
-        .set({ Accept: 'application/json', Authorization: token })
-        .then(result => {
-          expect(result.statusCode).toBe(503);
-          expect(result.body.message).toBe('invalid Token ');
-          done();
         })
     );
   });

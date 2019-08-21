@@ -1,12 +1,6 @@
 const request = require('supertest'),
   app = require('../app'),
-  {
-    factoryCreate,
-    factoryCreateAlbums,
-    token,
-    albumPhotos,
-    responseAlbumsList
-  } = require('../test/utils.test'),
+  { factoryCreate, factoryCreateAlbums, albumPhotos, responseAlbumsList } = require('../test/utils'),
   dictum = require('dictum.js');
 
 describe('album purchase', () => {
@@ -17,20 +11,24 @@ describe('album purchase', () => {
       email: 'yesica@wolox.co',
       password: 'shdfgs345',
       administrator: true
-    })
-      .then(() =>
-        request(app)
-          .post('/albums/1')
-          .set({ Accept: 'application/json', Authorization: token })
-      )
-      .then(response => {
-        expect(response.statusCode).toBe(201);
-        expect(response.text).toBe("the album 'Prueba de albums' was purchased correctly");
-        dictum.chai(response, 'should register with all the fields correctly');
-        done();
-      });
+    }).then(() =>
+      request(app)
+        .post('/users/sessions')
+        .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+        .set('Accept', 'application/json')
+        .then(response => {
+          request(app)
+            .post('/albums/1')
+            .set({ Accept: 'application/json', Authorization: response.body.token })
+            .then(result => {
+              expect(result.statusCode).toBe(201);
+              expect(result.text).toBe("the album 'Prueba de albums' was purchased correctly");
+              dictum.chai(result, 'should register with all the fields correctly');
+              done();
+            });
+        })
+    );
   });
-
   it('should not allow buy an album', done => {
     factoryCreate({
       name: 'yesica',
@@ -44,14 +42,20 @@ describe('album purchase', () => {
       })
       .then(() =>
         request(app)
-          .post('/albums/1')
-          .set({ Accept: 'application/json', Authorization: token })
-      )
-      .then(response => {
-        expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('you cannot buy this album again');
-        done();
-      });
+          .post('/users/sessions')
+          .send({ email: 'yesica@wolox.co', password: 'shdfgs345' })
+          .set('Accept', 'application/json')
+          .then(response => {
+            request(app)
+              .post('/albums/1')
+              .set({ Accept: 'application/json', Authorization: response.body.token })
+              .then(result => {
+                expect(result.statusCode).toBe(400);
+                expect(result.body.message).toBe('you cannot buy this album again');
+                done();
+              });
+          })
+      );
   });
 });
 

@@ -19,7 +19,6 @@ exports.getAlbumSources = url => {
     uri: url,
     json: true
   };
-
   return request(options).catch(err => {
     logger.error(err);
     throw errors.albumsApiError(err.message);

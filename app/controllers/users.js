@@ -17,7 +17,7 @@ exports.signIn = (req, res, next) =>
   servicesUser
     .signIn(req.body)
     .then(token => {
-      res.status(200).send({ token });
+      res.status(200).send(token);
     })
     .catch(next);
 

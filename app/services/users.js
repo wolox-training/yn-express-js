@@ -7,7 +7,8 @@ const { User } = require('../models'),
   { secret } = configDevelopment.common.jwt,
   servicesAlbums = require('../services/albums'),
   config = require('../../config'),
-  { url } = config.common.apiAlbums;
+  { url } = config.common.apiAlbums,
+  { expiration } = config.common.tokens;
 
 const upsert = userData =>
   User.upsert(userData, { where: { email: userData.email } })
@@ -48,6 +49,10 @@ exports.validateToken = ({ email, iat }) =>
           throw error.validateTokenError('invalid Token ');
         }
       }
+      const calculateSeconds = Math.floor(Date.now() / 1000) - Math.floor(iat / 1000);
+      if (expiration < calculateSeconds) {
+        throw error.validateTokenError('the token has expired');
+      }
     })
     .catch(err => {
       throw error.databaseError(err.message);
@@ -83,7 +88,7 @@ exports.signIn = async ({ email, password }) => {
       administrator: result.administrator,
       iat: Date.now()
     };
-    const token = jwt.encode(bodyToken, secret);
+    const token = { token: jwt.encode(bodyToken, secret), expiresAt: expiration };
     return token;
   } catch (err) {
     throw err;
