@@ -1,11 +1,5 @@
 const logger = require('../../app/logger'),
-  dataAlbums = require('../fixture/albumPhotos');
-
-const album = {
-  userId: 1,
-  id: 1,
-  title: 'Prueba de albums'
-};
+  { albumPhotos, album } = require('../fixture/albumPhotos');
 
 module.exports = jest.fn(url => {
   logger.info(url.uri);
@@ -13,5 +7,5 @@ module.exports = jest.fn(url => {
   if (photos === -1) {
     return Promise.resolve(album);
   }
-  return Promise.resolve(dataAlbums.single);
+  return Promise.resolve(albumPhotos);
 });
