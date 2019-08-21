@@ -30,6 +30,9 @@ exports.userAlbumsListError = message => internalError(message, exports.USER_ALB
 exports.USER_ALBUMS_PHOTOS_LIST_ERROR = 'user_albums_photos_list_error';
 exports.userAlbumPhotosListError = message => internalError(message, exports.USER_ALBUMS_PHOTOS_LIST_ERROR);
 
+exports.DISABLE_ALL_SESSIONS_ERROR = 'disable_all_sessions_error';
+exports.disableAllSessionsError = message => internalError(message, exports.DISABLE_ALL_SESSIONS_ERROR);
+
 exports.VALIDATE_TOKEN_ERROR = 'validate_token_error';
 exports.validateTokenError = message => internalError(message, exports.VALIDATE_TOKEN_ERROR);
 

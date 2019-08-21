@@ -1,16 +1,13 @@
 const request = require('supertest'),
   app = require('../app'),
-  { factoryCreate, factoryCreateAlbums, token, albumPhotos } = require('../test/utils.test'),
-  dictum = require('dictum.js');
-
-const responseAlbumsList = [
   {
-    id: 1,
-    albumId: 1,
-    name: 'eaque aut omnis a',
-    userId: 1
-  }
-];
+    factoryCreate,
+    factoryCreateAlbums,
+    token,
+    albumPhotos,
+    responseAlbumsList
+  } = require('../test/utils.test'),
+  dictum = require('dictum.js');
 
 describe('album purchase', () => {
   it('should allow buy an album', done => {

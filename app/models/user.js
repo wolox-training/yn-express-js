@@ -25,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+      },
+      dateToken: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+        field: 'date_token'
       }
     },
     {
