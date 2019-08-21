@@ -6,7 +6,7 @@ node_js:
 sudo: true
 
 env:
-  - CXX=g++-4.8 NODE_ENV=testing SECRET=xxx EXPIRATION_TEST=1
+  - CXX=g++-4.8 NODE_ENV=testing SECRET=xxx EXPIRATION_TEST=1 HOST_MAILER=smtp.mailtrap.io PORT_MAILER=2525 USER_MAILER=c53662ea67d4f1 PASSWORD_MAILER=56f3672274780c TEMPLATE_MAIL=<h1 style="color: #5e9ca0;">WELCOME!</h1><p>Thank you for registering for the wolox training system.</p><p><strong>&nbsp;</strong></p>
 addons:
   apt:
     sources:
