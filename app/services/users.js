@@ -8,7 +8,8 @@ const { User } = require('../models'),
   servicesAlbums = require('../services/albums'),
   config = require('../../config'),
   { url } = config.common.apiAlbums,
-  { expiration } = config.common.tokens;
+  { expiration } = config.common.tokens,
+  { sendMail } = require('./mailer');
 
 const upsert = userData =>
   User.upsert(userData, { where: { email: userData.email } })
@@ -60,9 +61,14 @@ exports.validateToken = ({ email, iat }) =>
 
 exports.createUser = userData =>
   User.create(userData)
-    .then(result => {
+    .then(() => {
       logger.info(`the user was created correctly: ${userData.name}`);
-      return result;
+      return sendMail({
+        from: 'yesica.betancourt@wolox.co',
+        to: userData.email,
+        subject: `Welcome: ${userData.name}`,
+        html: config.common.mailer.templateMailer
+      });
     })
     .catch(err => {
       if (err.name === 'SequelizeUniqueConstraintError') {
